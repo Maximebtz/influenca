@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 :root {
   --background: #ffffff;
@@ -15,13 +16,103 @@
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #080705;
+  font-family: 'Inter', sans-serif;
+}
+
+main {
+  width: 100%;
+  border-radius: 32px;
+  overflow: scroll;
+  height: 100vh;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /*** Headings ***/
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3 {
+    @apply text-2xl font-bold;
+  }
+
+  h4 {
+    @apply text-xl font-bold;
+  }
+
+  p {
+    @apply text-base;
+  }
+
+  /*** Form ***/
+  form {
+    @apply flex flex-col gap-2 max-w-96;
+  }
+
+  form label {
+    @apply text-xl font-medium;
+  }
+
+  form input {
+    @apply border border-influenca-gray rounded-lg p-2;
+  }
+
+  form input:focus {
+    @apply outline-none border-influenca-gold;
+  }
+
+
+  /*** Text ***/
+  .small-text {
+    @apply text-sm;
+  }
+
+  /*** Wrapper ***/
+  .wrapper {
+    @apply min-h-screen md:pt-24 pt-20 bg-white rounded-[32px];
+  }
+
+  @media screen and (max-height: 768px) {
+    .wrapper {
+      max-height: calc(100vh - 80px);
+    }
+  }
+
+  /*** Card ***/
+  .card {
+    @apply bg-white rounded-2xl p-4 flex-col flex gap-2;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .card h3 {
+    @apply text-lg font-bold;
+  }
+
+  .card-description {
+    @apply text-sm text-influenca-gray;
+  }
+
+  /*** Button ***/
+  button {
+    @apply cursor-pointer mt-4 rounded-lg hover:opacity-70 transition-opacity;
+  }
+
+  .medium-button {
+    @apply bg-white flex justify-center items-center text-black rounded-lg p-2 w-40 h-9;
+  }
+
+
+  /*** Tag ***/
+  .tag {
+    @apply bg-influenca-light-gray text-influenca-black text-xs font-medium rounded-full px-2 py-1;
   }
 }
