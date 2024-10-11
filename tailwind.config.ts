@@ -9,8 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        "influenca-blue": "#003CFF",
+        "influenca-gold": "#D4AF37",
+        "influenca-light-gray": "#FAFAFA",
+        "influenca-gray": "#CCCCCC",
+        "influenca-dark-brown": "#181610",
+        "influenca-black": "#080705",
+        "influenca-black-30": "rgba(8, 7, 5, 0.3)",
+        "influenca-black-70": "rgba(8, 7, 5, 0.7)",
       },
     },
   },
