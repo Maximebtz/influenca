@@ -1,0 +1,22 @@
+model Product {
+  id            String     @id @default(cuid()) @map("_id")
+  color         String
+  size          String
+  price         Float
+  description   String
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  influencerId  String
+  influencer    User       @relation("InfluencerProducts", fields: [influencerId], references: [id])
+  categories    ProductCategory[]
+  orders        OrderProduct[]
+}
+
+model ProductCategory {
+  id         String   @id @default(cuid()) @map("_id")
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+  @@unique([productId, categoryId])
+}

@@ -1,0 +1,10 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"] // Découpeage dossier models
+}
+
+datasource db {
+  provider      = "mongodb"
+  url           = env("DATABASE_URL")
+  relationMode  = "prisma"
+}
