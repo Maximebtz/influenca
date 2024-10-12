@@ -80,7 +80,7 @@ export default function SignUpForm() {
         <input type="checkbox" id="terms" required />
         <label htmlFor="terms">Accepter les conditions d'utilisation</label>
       </div>
-      <button type="submit">S'inscrire</button>
+      <button className='medium-button' type="submit">S'inscrire</button>
     </form>
   );
 }
