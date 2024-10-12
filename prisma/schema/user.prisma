@@ -1,0 +1,30 @@
+model User {
+  id              String   @id @default(cuid()) @map("_id")
+  email           String   @unique
+  username        String   @unique
+  avatar          String?
+  password        String
+  role            Role     @default(BUYER)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  products        Product[] @relation("InfluencerProducts")
+  orders          Order[]   @relation("BuyerOrders")
+  following       Follow[]  @relation("UserFollowing")
+  followers       Follow[]  @relation("UserFollowers")
+}
+
+enum Role {
+  BUYER
+  INFLUENCER
+}
+
+model Follow {
+  id           String   @id @default(cuid()) @map("_id")
+  follower     User     @relation("UserFollowing", fields: [followerId], references: [id])
+  followerId   String
+  following    User     @relation("UserFollowers", fields: [followingId], references: [id])
+  followingId  String
+  createdAt    DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
