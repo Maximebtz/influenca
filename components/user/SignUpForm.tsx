@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
+import { signIn } from 'next-auth/react';
+import Image from 'next/image';
 export default function SignUpForm() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [role, setRole] = useState('BUYER');
+  const [role, setRole] = useState<'BUYER' | 'INFLUENCER'>('BUYER');
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -17,25 +18,40 @@ export default function SignUpForm() {
       alert("Les mots de passe ne correspondent pas");
       return;
     }
-    
+
     try {
-      const response = await fetch('/api/signup', {
+      console.log('Role being sent:', role);
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, username, password, role }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        router.push('/login');
+        const result = await signIn('credentials', {
+          email,
+          password,
+          redirect: false,
+        });
+
+        if (result?.error) {
+          alert('Erreur lors de la connexion automatique');
+        } else {
+          router.push('/');
+        }
       } else {
-        const errorData = await response.json();
-        console.error('Erreur de réponse:', errorData);
-        alert(`Erreur: ${errorData.message}`);
+        alert(data.error || 'Une erreur est survenue lors de l\'inscription');
       }
     } catch (error) {
       console.error('Erreur lors de l\'inscription:', error);
       alert('Une erreur est survenue lors de l\'inscription');
     }
+  };
+
+  const handleGoogleSignIn = () => {
+    signIn('google', { callbackUrl: '/' });
   };
 
   return (
@@ -70,25 +86,25 @@ export default function SignUpForm() {
       />
       <div className='flex items-center gap-2'>
         <p>
-          Je suis un : 
+          Je suis un :
         </p>
-        <input 
+        <input
           type="radio"
           id="buyer"
           name="role"
           value="BUYER"
           checked={role === "BUYER"}
-          onChange={(e) => setRole(e.target.value)}
+          onChange={() => setRole('BUYER')}
           required
         />
         <label htmlFor="buyer" className='text-base'>Acheteur</label>
         <input
-          type="radio" 
+          type="radio"
           id="influencer"
           name="role"
           value="INFLUENCER"
           checked={role === "INFLUENCER"}
-          onChange={(e) => setRole(e.target.value)}
+          onChange={() => setRole('INFLUENCER')}
           required
         />
         <label htmlFor="influencer" className='text-base'>Influenceur</label>
@@ -98,6 +114,24 @@ export default function SignUpForm() {
         <label htmlFor="terms" className='text-sm'>Accepter les conditions d'utilisation</label>
       </div>
       <button className='medium-button' type="submit">S'inscrire</button>
+
+      {/* <div className="relative my-4">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-300"></div>
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="px-2 bg-white text-gray-500">Ou</span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={handleGoogleSignIn}
+        className="flex items-center justify-center gap-2 p-2 border border-gray-300 rounded-md hover:bg-gray-50"
+      >
+        <Image src="/icons/google.png" alt="Google" width={20} height={20} />
+        Continuer avec Google
+      </button> */}
     </form>
   );
 }
