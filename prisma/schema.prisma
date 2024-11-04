@@ -1,0 +1,141 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+//* ===== MODÈLES D'AUTHENTIFICATION ===== *//
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+//* ===== MODÈLES UTILISATEUR ===== *//
+model User {
+  id            String    @id @default(cuid()) @map("_id")
+  name          String?
+  email         String    @unique
+  username      String    @unique
+  emailVerified DateTime?
+  image         String?
+  avatar        String?
+  password      String?
+  role          Role      @default(BUYER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  accounts      Account[]
+  sessions      Session[]
+  products      Product[]  @relation("InfluencerProducts")
+  orders        Order[]    @relation("BuyerOrders")
+  following     Follow[]   @relation("UserFollowing")
+  followers     Follow[]   @relation("UserFollowers")
+}
+
+enum Role {
+  BUYER
+  INFLUENCER
+}
+
+model Follow {
+  id           String   @id @default(cuid()) @map("_id")
+  follower     User     @relation("UserFollowing", fields: [followerId], references: [id])
+  followerId   String
+  following    User     @relation("UserFollowers", fields: [followingId], references: [id])
+  followingId  String
+  createdAt    DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
+
+//* ===== MODÈLES PRODUIT ===== *//
+model Product {
+  id            String     @id @default(cuid()) @map("_id")
+  color         String
+  size          String
+  price         Float
+  description   String
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  influencerId  String
+  influencer    User       @relation("InfluencerProducts", fields: [influencerId], references: [id])
+  categories    ProductCategory[]
+  orders        OrderProduct[]
+}
+
+//* ===== MODÈLES CATEGORIE ===== *//
+model ProductCategory {
+  id         String   @id @default(cuid()) @map("_id")
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+  
+  @@unique([productId, categoryId])
+}
+
+model Category {
+  id         String       @id @default(cuid()) @map("_id")
+  name       String
+  products   ProductCategory[]
+}
+
+//* ===== MODÈLES COMMANDE ===== *//
+model Order {
+  id        String   @id @default(cuid()) @map("_id")
+  price     Float
+  status    OrderStatus @default(PENDING)
+  products  OrderProduct[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  buyerId   String
+  buyer     User     @relation("BuyerOrders", fields: [buyerId], references: [id])
+}
+
+model OrderProduct {
+  id        String   @id @default(cuid()) @map("_id")
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
+}
+
+enum OrderStatus {
+  PENDING
+  SHIPPED
+}
