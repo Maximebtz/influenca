@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/layouts/header";
-import { ClerkProvider } from "@clerk/nextjs";
 
 
 export const metadata: Metadata = {
