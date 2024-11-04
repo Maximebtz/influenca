@@ -115,4 +115,12 @@ main {
   .tag {
     @apply bg-influenca-light-gray text-influenca-black text-xs font-medium rounded-full px-2 py-1;
   }
+
+}
+.cl-internal-1eekank {
+  color: white !important;
+}
+
+.cl-internal-1j7ahlv {
+  mix-blend-mode: normal !important; /* Enlève le mode de mixage */
 }

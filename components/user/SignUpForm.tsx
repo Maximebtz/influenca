@@ -39,7 +39,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-24">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-14 w-full max-w-md mx-auto">
       <input
         type="email"
         value={email}
@@ -68,17 +68,34 @@ export default function SignUpForm() {
         placeholder="Répéter le mot de passe"
         required
       />
-      <select
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-        required
-      >
-        <option value="BUYER">Acheteur</option>
-        <option value="INFLUENCER">Influenceur</option>
-      </select>
-      <div>
+      <div className='flex items-center gap-2'>
+        <p>
+          Je suis un : 
+        </p>
+        <input 
+          type="radio"
+          id="buyer"
+          name="role"
+          value="BUYER"
+          checked={role === "BUYER"}
+          onChange={(e) => setRole(e.target.value)}
+          required
+        />
+        <label htmlFor="buyer" className='text-base'>Acheteur</label>
+        <input
+          type="radio" 
+          id="influencer"
+          name="role"
+          value="INFLUENCER"
+          checked={role === "INFLUENCER"}
+          onChange={(e) => setRole(e.target.value)}
+          required
+        />
+        <label htmlFor="influencer" className='text-base'>Influenceur</label>
+      </div>
+      <div className='flex items-center gap-2'>
         <input type="checkbox" id="terms" required />
-        <label htmlFor="terms">Accepter les conditions d'utilisation</label>
+        <label htmlFor="terms" className='text-sm'>Accepter les conditions d'utilisation</label>
       </div>
       <button className='medium-button' type="submit">S'inscrire</button>
     </form>
