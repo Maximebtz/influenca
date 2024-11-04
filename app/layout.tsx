@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/layouts/header";
-import { ClerkProvider } from "@clerk/nextjs";
+import { AuthProvider } from './providers'
 
 
 export const metadata: Metadata = {
@@ -18,10 +18,12 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className="bg-influenca-black">
-        <Header />
-        <main>
-          {children}
-        </main>
+        <AuthProvider>
+          <Header />
+          <main>
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   );
