@@ -91,7 +91,7 @@ model Product {
   description   String
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
-  influencerId  String
+  influencerId  String     @db.ObjectId
   influencer    User       @relation("InfluencerProducts", fields: [influencerId], references: [id])
   categories    ProductCategory[]
   orders        OrderProduct[]
@@ -122,7 +122,7 @@ model Order {
   products  OrderProduct[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  buyerId   String
+  buyerId   String   @db.ObjectId
   buyer     User     @relation("BuyerOrders", fields: [buyerId], references: [id])
 }
 
