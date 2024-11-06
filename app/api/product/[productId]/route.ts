@@ -44,3 +44,18 @@ export async function GET(
     );
   }
 } 
+
+// Delete a product
+export async function DELETE(request: Request, { params }: { params: { productId: string } }) {
+  const productId = params.productId;
+
+  const product = await prisma.product.delete({
+    where: { id: productId }
+  })
+
+  if (!product) {
+    return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+  }
+
+  return NextResponse.json(product);
+}

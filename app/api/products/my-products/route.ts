@@ -1,11 +1,22 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { auth } from "@/app/auth";
 
-// Récupérer tous les produits
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const session = await auth();
+    
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "Non autorisé" },
+        { status: 401 }
+      );
+    }
 
     const products = await prisma.product.findMany({
+      where: {
+        influencerId: session.user.id
+      },
       include: {
         categories: {
           include: {
@@ -24,24 +35,11 @@ export async function GET() {
     });
 
     return NextResponse.json(products);
-    
   } catch (error) {
-
     console.error('Erreur lors de la récupération des produits:', error);
-    
-  } finally {
-    // Déconnexion propre
-    await prisma.$disconnect();
+    return NextResponse.json(
+      { error: "Erreur interne du serveur" },
+      { status: 500 }
+    );
   }
-}
-
-// Delete a product
-export async function DELETE(request: Request) {
-  const { id } = await request.json();
-
-  const product = await prisma.product.delete({
-    where: { id }
-  });
-
-  return NextResponse.json(product);
-}
+} 

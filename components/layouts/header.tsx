@@ -58,12 +58,20 @@ function Header() {
             </div>
             <div id='user-dropdown-menu' className={`absolute top-full mt-2 px-2 right-0 w-max h-max rounded-md border border-influenca-light-gray border-opacity-25 ${isUserDropdownMenuOpen ? 'block' : 'hidden'}`}>
               {session.user.role === 'INFLUENCER' && (
-                <a href="/product/create">
-                  <button className='p-2 text-nowrap bg-transparent mt-1 text-white gap-2'>
-                    Ajouter un produit
-                  </button>
-                  <hr className='border-t w-full opacity-30 bg-influenca-light-gray' />
-                </a>
+                <div>
+                  <a href="/products/my-products">
+                    <button className='p-2 text-nowrap bg-transparent mt-1 text-white gap-2'>
+                      Mes produits
+                    </button>
+                    <hr className='border-t w-full opacity-30 bg-influenca-light-gray' />
+                  </a>
+                  <a href="/product/create">
+                    <button className='p-2 text-nowrap bg-transparent mt-1 text-white gap-2'>
+                      Ajouter un produit
+                    </button>
+                    <hr className='border-t w-full opacity-30 bg-influenca-light-gray' />
+                  </a>
+                </div>
               )}
               <button onClick={() => signOut()} className='p-2 text-nowrap bg-transparent mt-0 text-white flex items-center gap-2'>
                 Se déconnecter <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>
