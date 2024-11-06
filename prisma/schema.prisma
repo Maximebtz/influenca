@@ -48,9 +48,8 @@ model VerificationToken {
 model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
-  email         String?   @unique
+  email         String    @unique
   emailVerified DateTime?
-  image         String?
   username      String    @unique
   avatar        String?
   password      String
@@ -59,10 +58,15 @@ model User {
   updatedAt     DateTime  @updatedAt
   
   accounts      Account[]
+  
   sessions      Session[]
+  
   products      Product[]  @relation("InfluencerProducts")
+  
   orders        Order[]    @relation("BuyerOrders")
+  
   following     Follow[]   @relation("UserFollowing")
+  
   followers     Follow[]   @relation("UserFollowers")
 }
 
@@ -73,67 +77,82 @@ enum Role {
 
 model Follow {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  follower     User     @relation("UserFollowing", fields: [followerId], references: [id])
-  followerId   String   @db.ObjectId
-  following    User     @relation("UserFollowers", fields: [followingId], references: [id])
-  followingId  String   @db.ObjectId
   createdAt    DateTime @default(now())
+  
+  followerId   String   @db.ObjectId
+  follower     User     @relation("UserFollowing", fields: [followerId], references: [id])
+  
+  followingId  String   @db.ObjectId
+  following    User     @relation("UserFollowers", fields: [followingId], references: [id])
 
   @@unique([followerId, followingId])
 }
 
 //* ===== MODÈLES PRODUIT ===== *//
 model Product {
-  id            String     @id @default(cuid()) @map("_id")
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
   color         String
   size          String
   price         Float
   description   String
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+  
   influencerId  String     @db.ObjectId
   influencer    User       @relation("InfluencerProducts", fields: [influencerId], references: [id])
+  
   categories    ProductCategory[]
+
   orders        OrderProduct[]
 }
 
 //* ===== MODÈLES CATEGORIE ===== *//
 model ProductCategory {
-  id         String   @id @default(cuid()) @map("_id")
-  product    Product  @relation(fields: [productId], references: [id])
-  productId  String
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId String
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
   
-  @@unique([productId, categoryId])
+  productId  String   @db.ObjectId
+  product    Product  @relation(fields: [productId], references: [id])
+  
+  categoryId String   @db.ObjectId
+  category   Category @relation(fields: [categoryId], references: [id])
+  
+  @@index([productId])
+  @@index([categoryId])
 }
 
 model Category {
-  id         String       @id @default(cuid()) @map("_id")
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
   name       String
+  
   products   ProductCategory[]
 }
 
 //* ===== MODÈLES COMMANDE ===== *//
 model Order {
-  id        String   @id @default(cuid()) @map("_id")
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   price     Float
   status    OrderStatus @default(PENDING)
   products  OrderProduct[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
   buyerId   String   @db.ObjectId
   buyer     User     @relation("BuyerOrders", fields: [buyerId], references: [id])
 }
 
 model OrderProduct {
-  id        String   @id @default(cuid()) @map("_id")
-  orderId   String
-  order     Order    @relation(fields: [orderId], references: [id])
-  productId String
-  product   Product  @relation(fields: [productId], references: [id])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   quantity  Int
   price     Float
+  
+  orderId   String   @db.ObjectId
+  order     Order    @relation(fields: [orderId], references: [id])
+  
+  productId String   @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
 }
 
 enum OrderStatus {
