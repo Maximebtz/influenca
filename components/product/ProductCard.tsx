@@ -42,7 +42,8 @@ function ProductCard({ id, slug, title, description, price, createdAt, influence
                     alt={title}
                     width={200}
                     height={200}
-                    className="rounded"
+                    className="rounded w-full h-full object-cover"
+                    priority
                 />
                 {modify && (
                     <div className='absolute top-2 right-2 flex gap-2'>
@@ -68,7 +69,7 @@ function ProductCard({ id, slug, title, description, price, createdAt, influence
                 )}
                 <div className="flex items-center gap-2 mb-2">
                     <div className="w-10 h-10 rounded-full bg-influenca-light-gray flex items-center justify-center">
-                        {influencer.avatar ? (
+                        {/* {influencer.avatar ? (
                             <Image
                                 src={influencer.avatar}
                                 alt={influencer.username}
@@ -76,13 +77,13 @@ function ProductCard({ id, slug, title, description, price, createdAt, influence
                                 height={32}
                                 className="rounded-full"
                             />
-                        ) : (
+                        ) : ( */}
                             <div className='w-10 h-10 bg-black rounded-full flex items-center justify-center'>
                                 <span className='text-white'>
                                     {influencer.username?.charAt(0).toUpperCase()}
                                 </span>
                             </div>
-                        )}
+                        {/* )} */}
                     </div>
                     <span className="text-sm font-medium">{influencer.username}</span>
                 </div>
