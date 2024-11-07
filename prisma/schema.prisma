@@ -91,6 +91,8 @@ model Follow {
 //* ===== MODÈLES PRODUIT ===== *//
 model Product {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
+  slug          String @unique
+  title         String
   color         String
   size          String
   price         Float

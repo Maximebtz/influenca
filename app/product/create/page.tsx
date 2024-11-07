@@ -2,31 +2,30 @@
 
 import ProductCreateForm from "@/components/product/ProductCreateForm"
 import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
 import { redirect } from 'next/navigation'
 
 
 const CreateArticle = () => {
   const { data: session, status } = useSession()
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      redirect('/login')
-    }
+  // Vérifier si l'utilisateur est connecté et a le rôle INFLUENCER
+  if (status === 'loading') {
+    return null
+  }
 
-    if (session?.user?.role !== 'INFLUENCER') {
-      redirect('/home')
-    }
-  })
+  if (!session?.user || session.user.role !== 'INFLUENCER') {
+    throw new Error('Accès non autorisé')
+    redirect('/home')
+  }
 
   return (
     <div className='wrapper'>
-      <div className='max-w-7xl mx-auto px-4'>
-        <h1 className='mb-8'>
+      <div className='max-w-2xl mx-auto px-4 mt-10'>
+        <h1 className='mb-8 text-center'>
           Créer un produit
         </h1>
         <ProductCreateForm />
-      </div>
+      </div>    
     </div>
   )
 }

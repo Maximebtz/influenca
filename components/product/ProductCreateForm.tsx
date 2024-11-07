@@ -11,16 +11,18 @@ interface Category {
 
 const ProductCreateForm = () => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   
   const [categories, setCategories] = useState<Category[]>([]);
   
   const [formData, setFormData] = useState({
     color: "",
+    title: "",
     size: "",
     price: "",
     description: "",
     categoryIds: [] as string[]
+
   });
 
   useEffect(() => {
@@ -42,8 +44,9 @@ const ProductCreateForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!session?.user) {
-      alert("Vous devez être connecté pour créer un produit");
+    if (!session?.user?.id) {
+      console.error("ID de l'utilisateur manquant");
+      alert("Erreur: ID de l'utilisateur non trouvé");
       return;
     }
 
@@ -59,18 +62,36 @@ const ProductCreateForm = () => {
         }),
       });
 
-      if (response.ok) {
-        router.refresh();
-        router.push("/");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erreur lors de la création du produit");
       }
+
+      router.refresh();
+      router.push("/");
     } catch (error) {
       console.error("Erreur lors de la création:", error);
+      alert(error instanceof Error ? error.message : "Une erreur est survenue");
     }
   };
- console.log(session?.user.id)
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-xl mx-auto p-4">
       
+      <div>
+        <label className="block text-sm font-medium mb-1">
+          Titre
+        </label>
+        <input
+          type="text"
+          value={formData.title}
+          onChange={(e) => setFormData({...formData, title: e.target.value})}
+          className="w-full p-2 border rounded-md"
+          autoComplete="on"
+          required
+        />
+      </div>
+
       <div>
         <label className="block text-sm font-medium mb-1">
           Couleur
@@ -80,6 +101,7 @@ const ProductCreateForm = () => {
           value={formData.color}
           onChange={(e) => setFormData({...formData, color: e.target.value})}
           className="w-full p-2 border rounded-md"
+          autoComplete="on"
           required
         />
       </div>
@@ -93,6 +115,7 @@ const ProductCreateForm = () => {
           value={formData.size}
           onChange={(e) => setFormData({...formData, size: e.target.value})}
           className="w-full p-2 border rounded-md"
+          autoComplete="on"
           required
         />
       </div>
@@ -106,6 +129,7 @@ const ProductCreateForm = () => {
           value={formData.price}
           onChange={(e) => setFormData({...formData, price: e.target.value})}
           className="w-full p-2 border rounded-md"
+          autoComplete="on"
           required
         />
       </div>
@@ -119,6 +143,7 @@ const ProductCreateForm = () => {
           onChange={(e) => setFormData({...formData, description: e.target.value})}
           className="w-full p-2 border rounded-md"
           required
+          autoComplete="on"
         />
       </div>
 
@@ -131,6 +156,7 @@ const ProductCreateForm = () => {
           onChange={(e) => setFormData({...formData, categoryIds: [e.target.value]})}
           className="w-full p-2 border rounded-md"
           required
+          autoComplete="on"
         >
           <option value="">Sélectionnez une catégorie</option>
           {categories.map((category) => (

@@ -1,16 +1,35 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 
+function generateSlug(text: string) {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+}
+
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-
-    // Conversion du prix en nombre
     const price = parseFloat(data.price);
     
-    // Création du produit avec sa catégorie
+    // Générer un slug unique basé sur le titre
+    const baseSlug = generateSlug(data.title);
+    let slug = baseSlug;
+    let counter = 1;
+
+    // Vérifier si le slug existe déjà
+    while (await prisma.product.findUnique({ where: { slug } })) {
+      const randomString = Math.random().toString(36).substring(2, 8);
+      slug = `${baseSlug}-${randomString}`;
+    }
+
     const product = await prisma.product.create({
       data: {
+        title: data.title,
+        slug: slug,
         color: data.color,
         size: data.size,
         price: price,

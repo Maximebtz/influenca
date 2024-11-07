@@ -45,10 +45,14 @@ async function Home() {
               <ProductCard
                 key={product.id}
                 id={product.id}
+                slug={product.slug}
+                title={product.title}
+                createdAt={product.createdAt}
                 description={product.description}
                 price={product.price}
                 influencer={product.influencer}
                 categories={product.categories}
+                modify={false}
               />
             ))
           ) : (

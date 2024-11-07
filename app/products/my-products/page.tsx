@@ -3,19 +3,59 @@
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { redirect } from 'next/navigation'
+import ProductCard from '@/components/product/ProductCard'
 
 interface Product {
   id: string
+  title: string
   name: string
   description: string
+  slug: string
   price: number
+  createdAt: Date
   images: string[]
+  influencer: {
+    username: string
+    avatar?: string
+  }
+  categories: {
+    category: {
+      name: string
+    }
+  }[]
 }
 
 export default function MyProducts() {
   const { data: session, status } = useSession()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+
+  const handleDelete = async (productId: string) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+      try {
+        const response = await fetch(`/api/products/my-products/${productId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setProducts(products.filter(product => product.id !== productId));
+          alert('Produit supprimé avec succès');
+        } else {
+          console.error('Erreur de suppression:', data);
+          alert(data.error || 'Erreur lors de la suppression du produit');
+        }
+      } catch (error) {
+        console.error('Erreur détaillée:', error);
+        alert('Erreur lors de la suppression du produit');
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -56,28 +96,30 @@ export default function MyProducts() {
   if (loading) {
     return <div className="flex justify-center items-center min-h-screen">Chargement...</div>
   }
-  console.log(products)
+
   return (
     <div className='wrapper'>
-      <div className='max-w-7xl mx-auto px-4'>
-        <h1 className="text-2xl font-bold">Mes Produits</h1>
+      <div className='max-w-7xl mx-auto px-4 mt-10'>
+        <h1 className="text-2xl font-bold mb-6">Mes Produits</h1>
         
         {products.length === 0 ? (
             <p>Vous n'avez pas encore de produits.</p>
         ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {products.map((product) => (
-                <div key={product.id} className="bg-white bg-opacity-10 rounded-lg p-4">
-                {product.images && product.images[0] && (
-                    <img 
-                    src={product.images[0]} 
-                    alt={product.name}
-                    className="w-full h-48 object-cover rounded-lg mb-4"
+                <div key={product.id} className='relative'>
+                    <ProductCard
+                        id={product.id}
+                        title={product.title}
+                        slug={product.slug}
+                        price={product.price}
+                        description={product.description}
+                        createdAt={product.createdAt}
+                        influencer={product.influencer}
+                        categories={product.categories}
+                        modify={true}
+                        onDelete={handleDelete}
                     />
-                )}
-                <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
-                <p className="text-gray-300 mb-2">{product.description}</p>
-                <p className="font-bold">{product.price}€</p>
                 </div>
             ))}
             </div>

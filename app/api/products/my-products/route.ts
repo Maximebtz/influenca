@@ -5,7 +5,7 @@ import { auth } from "@/app/auth";
 export async function GET(req: Request) {
   try {
     const session = await auth();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Non autorisé" },
@@ -42,4 +42,4 @@ export async function GET(req: Request) {
       { status: 500 }
     );
   }
-} 
+}
