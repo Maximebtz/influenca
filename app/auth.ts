@@ -1,17 +1,12 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from '@/lib/db';
-// import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
     providers: [
-        // GoogleProvider({
-        //     clientId: process.env.GOOGLE_CLIENT_ID!,
-        //     clientSecret: process.env.GOOGLE_CLIENT_SECRET!
-        // }),
         CredentialsProvider({
             name: "Credentials",
             credentials: {
@@ -53,14 +48,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks: {
         async jwt({ token, user }: { token: any, user: any }) {
             if (user) {
+                token.sub = user.id;
                 token.role = user.role;
                 token.username = user.username;
             }
             return token;
         },
         async session({ session, token }: { session: any, token: any }) {
-            if (session.user) {
-                session.user.role = token.role;
+            if (session?.user) {
+                session.user.id = token.sub as string;
+                session.user.role = token.role as string;
                 session.user.username = token.username;
             }
             return session;
