@@ -13,6 +13,7 @@ interface Product {
   slug: string
   price: number
   createdAt: Date
+  images: { url: string }[] | undefined
   influencer: {
     username: string
     avatar?: string
