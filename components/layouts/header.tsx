@@ -35,7 +35,7 @@ function Header() {
     <header className="flex justify-between items-center md:px-6 px-4 md:h-24 h-20 fixed top-0 left-0 z-50 w-full mix-blend-exclusion">
       <div className="relative z-10 isolate mix-blend-normal">
         <a href="/home" className="block">
-          <Image src="/logo/logo.png" alt="logo" width={56} height={56} className="cursor-pointer md:w-14 md:h-14 w-8 h-8" />
+          <Image src="/logo/logo.png" alt="logo" width={56} height={56} className="cursor-pointer md:w-14 md:h-14 w-8 h-8" priority/>
         </a>
       </div>
       <div className="flex items-center space-x-4 relative z-10">

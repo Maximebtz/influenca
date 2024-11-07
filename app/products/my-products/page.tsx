@@ -80,7 +80,6 @@ export default function MyProducts() {
         const data = await response.json()
         setProducts(data)
 
-        console.log("Data :" + data)
       } catch (error) {
         console.error('Erreur:', error)
       } finally {
