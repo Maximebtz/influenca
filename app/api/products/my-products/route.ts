@@ -30,7 +30,8 @@ export async function GET(req: Request) {
             email: true,
             avatar: true
           }
-        }
+        },
+        images: true
       }
     });
 

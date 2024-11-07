@@ -3,7 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/layouts/header";
 import { AuthProvider } from './providers'
-
+import Image from "next/image";
+import PageTransition from '@/components/transitions/PageTransition';
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,11 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className="bg-influenca-black">
+      <body className="bg-influenca-black relative">
+        <Image src="/logo/logo.png" alt="logo" width={72} height={72} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -z-10" priority/>
         <AuthProvider>
           <Header />
           <main>
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </main>
         </AuthProvider>
       </body>

@@ -22,8 +22,9 @@ const ProductCreateForm = () => {
     price: "",
     description: "",
     categoryIds: [] as string[]
-
   });
+
+  const [images, setImages] = useState<File[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -41,6 +42,12 @@ const ProductCreateForm = () => {
     fetchCategories();
   }, []);
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setImages(Array.from(event.target.files));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -50,16 +57,20 @@ const ProductCreateForm = () => {
       return;
     }
 
+    const formDataToSend = new FormData();
+    formDataToSend.append('productData', JSON.stringify({
+      ...formData,
+      influencerId: session.user.id
+    }));
+
+    images.forEach((image, index) => {
+      formDataToSend.append('images', image);
+    });
+
     try {
       const response = await fetch("/api/product/create", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          influencerId: session.user.id
-        }),
+        body: formDataToSend,
       });
 
       if (!response.ok) {
@@ -165,6 +176,19 @@ const ProductCreateForm = () => {
             </option>
           ))}
         </select>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">
+          Images
+        </label>
+        <input
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          accept="image/*"
+          className="w-full p-2 border rounded-md"
+        />
       </div>
 
       <button

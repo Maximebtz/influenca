@@ -47,15 +47,29 @@ export async function GET(
 
 // Delete a product
 export async function DELETE(request: Request, { params }: { params: { productId: string } }) {
-  const productId = params.productId;
+  try {
+    // Supprimer d'abord les relations
+    await prisma.$transaction([
+      // Supprimer les relations avec les catégories
+      prisma.productCategory.deleteMany({
+        where: { productId: params.productId }
+      }),
+      // Supprimer les images
+      prisma.image.deleteMany({
+        where: { productId: params.productId }
+      }),
+      // Enfin, supprimer le produit
+      prisma.product.delete({
+        where: { id: params.productId }
+      })
+    ]);
 
-  const product = await prisma.product.delete({
-    where: { id: productId }
-  })
-
-  if (!product) {
-    return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+    return NextResponse.json({ message: "Produit supprimé avec succès" });
+  } catch (error) {
+    console.error('Erreur lors de la suppression:', error);
+    return NextResponse.json(
+      { error: "Erreur interne du serveur", details: error },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json(product);
 }

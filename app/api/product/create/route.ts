@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
 
 function generateSlug(text: string) {
   return text
@@ -12,11 +15,33 @@ function generateSlug(text: string) {
 
 export async function POST(request: Request) {
   try {
-    const data = await request.json();
-    const price = parseFloat(data.price);
+    const data = await request.formData();
+    const productData = JSON.parse(data.get('productData') as string);
+    const files = data.getAll('images') as File[];
+
+    if (files.length === 0) {
+      return NextResponse.json(
+        { error: "Au moins une image est requise" },
+        { status: 400 }
+      );
+    }
+
+    const savedFiles = [];
+    for (const file of files) {
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const fileName = `${crypto.randomBytes(6).toString('hex')}${path.extname(file.name)}`;
+      const filePath = path.join('public/uploads', fileName);
+
+      await fs.promises.writeFile(filePath, buffer);
+
+      savedFiles.push({ url: `${fileName}` });
+    }
+
+    const price = parseFloat(productData.price);
     
     // Générer un slug unique basé sur le titre
-    const baseSlug = generateSlug(data.title);
+    const baseSlug = generateSlug(productData.title);
     let slug = baseSlug;
     let counter = 1;
 
@@ -28,19 +53,22 @@ export async function POST(request: Request) {
 
     const product = await prisma.product.create({
       data: {
-        title: data.title,
+        title: productData.title,
         slug: slug,
-        color: data.color,
-        size: data.size,
+        color: productData.color,
+        size: productData.size,
         price: price,
-        description: data.description,
+        description: productData.description,
+        images: {
+          create: savedFiles
+        },
         influencer: {
           connect: {
-            id: data.influencerId
+            id: productData.influencerId
           }
         },
         categories: {
-          create: data.categoryIds.map((categoryId: string) => ({
+          create: productData.categoryIds.map((categoryId: string) => ({
             categoryId
           }))
         }

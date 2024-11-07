@@ -52,6 +52,7 @@ async function Home() {
                 price={product.price}
                 influencer={product.influencer}
                 categories={product.categories}
+                images={product.images}
                 modify={false}
               />
             ))

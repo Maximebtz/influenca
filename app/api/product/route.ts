@@ -19,11 +19,13 @@ export async function GET() {
             email: true,
             avatar: true
           }
-        }
+        },
+        images: true
       }
     });
 
     return NextResponse.json(products);
+
     
   } catch (error) {
 

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/app/auth";
 
 export async function DELETE(
-  req: Request,
+  request: Request,
   { params }: { params: { productId: string } }
 ) {
   try {
@@ -38,14 +38,21 @@ export async function DELETE(
       );
     }
 
-    // Supprimer d'abord les relations avec les catégories
+    // Supprimer les relations ProductCategory
     await prisma.productCategory.deleteMany({
       where: {
         productId: params.productId
       }
     });
 
-    // Ensuite, supprimer le produit
+    // Supprimer les images associées
+    await prisma.image.deleteMany({
+      where: {
+        productId: params.productId
+      }
+    });
+
+    // Enfin, supprimer le produit
     const deletedProduct = await prisma.product.delete({
       where: { 
         id: params.productId,
@@ -62,7 +69,7 @@ export async function DELETE(
   } catch (error) {
     console.error('Erreur détaillée lors de la suppression:', error);
     return NextResponse.json(
-      { error: "Erreur interne du serveur", details: (error as Error).message },
+      { error: "Erreur interne du serveur wowowowowo", details: (error as Error).message },
       { status: 500 }
     );
   } finally {

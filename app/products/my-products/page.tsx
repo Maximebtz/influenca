@@ -13,7 +13,6 @@ interface Product {
   slug: string
   price: number
   createdAt: Date
-  images: string[]
   influencer: {
     username: string
     avatar?: string
@@ -116,6 +115,7 @@ export default function MyProducts() {
                         createdAt={product.createdAt}
                         influencer={product.influencer}
                         categories={product.categories}
+                        images={product.images}
                         modify={true}
                         onDelete={handleDelete}
                     />

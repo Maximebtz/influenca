@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react"
 import { signOut } from 'next-auth/react'
 
 function Header() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const [isUserDropdownMenuOpen, setIsUserDropdownMenuOpen] = useState(false)
 
   useEffect(() => {
@@ -39,7 +39,9 @@ function Header() {
         </a>
       </div>
       <div className="flex items-center space-x-4 relative z-10">
-        {session && session.user ? (
+        {status === 'loading' ? (
+          <div></div>
+        ) : session && session.user ? (
           <div className='flex items-center gap-4 relative'>
             <a href="/panier">
               <svg className='text-white' width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">

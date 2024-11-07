@@ -17,20 +17,33 @@ type ProductCardProps = {
             name: string
         }
     }[]
+    images?: { url: string }[]
     modify?: boolean
     onDelete?: (id: string) => void
 }
-function ProductCard({ id, slug, title, description, price, createdAt, influencer, categories, modify, onDelete }: ProductCardProps) {
+
+function ProductCard({ id, slug, title, description, price, createdAt, influencer, categories, images, modify, onDelete }: ProductCardProps) {
+    if (!images || images.length === 0) {
+        throw new Error("Chaque produit doit avoir au moins une image.");
+    }
+
     const handleClick = (e: React.MouseEvent) => {
         e.preventDefault()
         if (onDelete) {
             onDelete(id)
         }
     }
-
+    
     return (
-        <div className='relative'>
+        <Link href={`/product/${slug}`}>
             <div className="reliative card hover:scale-105 transition-transform cursor-pointer">
+                <Image
+                    src={`/uploads/${images[0].url}`}
+                    alt={title}
+                    width={200}
+                    height={200}
+                    className="rounded"
+                />
                 {modify && (
                     <div className='absolute top-2 right-2 flex gap-2'>
                         <Link href={`/product/edit/${id}`}>
@@ -82,7 +95,7 @@ function ProductCard({ id, slug, title, description, price, createdAt, influence
                 <p className="card-description">{description}</p>
                 <p className="text-lg font-bold">{price}€</p>
             </div>
-        </div>
+        </Link>
     )
 }
 
