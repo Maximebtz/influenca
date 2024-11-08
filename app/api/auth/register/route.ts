@@ -1,64 +1,79 @@
-import { prisma } from "@/lib/db";
-import { NextResponse } from "next/server";
-import bcrypt from "bcrypt";
+import { writeFile } from 'fs/promises';
+import { NextResponse } from 'next/server';
+import path from 'path';
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+import { prisma } from '@/lib/db';
 
-export async function POST(req: Request) {
-    try {
-        const { email, password, username, role } = await req.json();
+// Fonction pour générer un nom de fichier unique
+function generateUniqueFileName(originalName: string): string {
+  const uniqueSuffix = crypto.randomBytes(6).toString('hex');
+  const extension = path.extname(originalName);
+  return `${uniqueSuffix}${extension}`;
+}
 
-        if (!email || !password || !username || !role) {
-            return NextResponse.json(
-                { error: "Tous les champs sont requis" },
-                { status: 400 }
-            );
-        }
+export async function POST(request: Request) {
+  try {
+    const formData = await request.formData();
+    const email = formData.get('email') as string;
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
+    const role = formData.get('role') as 'BUYER' | 'INFLUENCER';
+    const avatar = formData.get('avatar') as File | null;
+    const banner = formData.get('banner') as File | null;
 
-        // Vérifier si l'email existe déjà
-        const existingUserEmail = await prisma.user.findUnique({
-            where: { email }
-        });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        if (existingUserEmail) {
-            return NextResponse.json(
-                { error: "Cet email est déjà utilisé" },
-                { status: 400 }
-            );
-        }
+    let avatarFilename = null;
+    let bannerFilename = null;
 
-        // Vérifier si le username existe déjà
-        const existingUserUsername = await prisma.user.findUnique({
-            where: { username }
-        });
-
-        if (existingUserUsername) {
-            return NextResponse.json(
-                { error: "Ce nom d'utilisateur est déjà utilisé" },
-                { status: 400 }
-            );
-        }
-
-        // Hasher le mot de passe
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Créer l'utilisateur
-        const user = await prisma.user.create({
-            data: {
-                email,
-                username,
-                password: hashedPassword,
-                role
-            }
-        });
-
-        return NextResponse.json(
-            { message: "Utilisateur créé avec succès" },
-            { status: 201 }
-        );
-    } catch (error) {
-        console.error("Erreur lors de l'inscription:", error);
-        return NextResponse.json(
-            { error: "Erreur lors de la création du compte" },
-            { status: 500 }
-        );
+    // Gérer l'upload des fichiers
+    if (avatar) {
+      const avatarBuffer = await avatar.arrayBuffer();
+      avatarFilename = generateUniqueFileName(avatar.name);
+      const avatarPath = path.join(process.cwd(), 'public/uploads', avatarFilename);
+      await writeFile(avatarPath, Buffer.from(avatarBuffer));
+      console.log('Avatar sauvegardé:', avatarPath);
     }
+
+    if (banner) {
+      const bannerBuffer = await banner.arrayBuffer();
+      bannerFilename = generateUniqueFileName(banner.name);
+      const bannerPath = path.join(process.cwd(), 'public/uploads', bannerFilename);
+      await writeFile(bannerPath, Buffer.from(bannerBuffer));
+      console.log('Bannière sauvegardée:', bannerPath);
+    }
+
+    // Création de l'utilisateur
+    const userData = {
+      email,
+      username,
+      password: hashedPassword,
+      role,
+      ...(avatarFilename && { avatar: avatarFilename }),
+      ...(bannerFilename && { banner: bannerFilename })
+    };
+
+    const user = await prisma.user.create({
+      data: userData
+    });
+
+    return NextResponse.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        avatar: user.avatar,
+        banner: user.banner
+      },
+    });
+
+  } catch (error: any) {
+    console.error('Erreur détaillée lors de l\'inscription:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de l\'inscription: ' + error.message },
+      { status: 500 }
+    );
+  }
 }

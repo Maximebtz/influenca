@@ -4,13 +4,34 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
+
 export default function SignUpForm() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState<'BUYER' | 'INFLUENCER'>('BUYER');
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [banner, setBanner] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const router = useRouter();
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setAvatar(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setBanner(file);
+      setBannerPreview(URL.createObjectURL(file));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,11 +41,26 @@ export default function SignUpForm() {
     }
 
     try {
-      console.log('Role being sent:', role);
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('username', username);
+      formData.append('password', password);
+      formData.append('role', role);
+      
+      if (role === 'INFLUENCER') {
+        if (avatar) {
+          console.log('Ajout de l\'avatar:', avatar);
+          formData.append('avatar', avatar);
+        }
+        if (banner) {
+          console.log('Ajout de la bannière:', banner);
+          formData.append('banner', banner);
+        }
+      }
+
       const response = await fetch('/api/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, username, password, role }),
+        body: formData,
       });
 
       const data = await response.json();
@@ -48,10 +84,6 @@ export default function SignUpForm() {
       console.error('Erreur lors de l\'inscription:', error);
       alert('Une erreur est survenue lors de l\'inscription');
     }
-  };
-
-  const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/' });
   };
 
   return (
@@ -85,9 +117,7 @@ export default function SignUpForm() {
         required
       />
       <div className='flex items-center gap-2'>
-        <p>
-          Je suis un :
-        </p>
+        <p>Je suis un :</p>
         <input
           type="radio"
           id="buyer"
@@ -109,29 +139,63 @@ export default function SignUpForm() {
         />
         <label htmlFor="influencer" className='text-base'>Influenceur</label>
       </div>
+
+      {role === 'INFLUENCER' && (
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Photo de profil</label>
+            <div className="flex items-center gap-4">
+              {avatarPreview && (
+                <div className="w-20 h-20 rounded-full overflow-hidden">
+                  <Image
+                    src={avatarPreview}
+                    alt="Avatar preview"
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                className="flex-1"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Image de bannière</label>
+            <div className="space-y-2">
+              {bannerPreview && (
+                <div className="w-full h-32 rounded-lg overflow-hidden">
+                  <Image
+                    src={bannerPreview}
+                    alt="Banner preview"
+                    width={400}
+                    height={128}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleBannerChange}
+                className="w-full"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className='flex items-center gap-2'>
         <input type="checkbox" id="terms" required />
         <label htmlFor="terms" className='text-sm'>Accepter les conditions d'utilisation</label>
       </div>
+      
       <button className='medium-button' type="submit">S'inscrire</button>
-
-      {/* <div className="relative my-4">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300"></div>
-        </div>
-        <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Ou</span>
-        </div>
-      </div>
-
-      <button
-        type="button"
-        onClick={handleGoogleSignIn}
-        className="flex items-center justify-center gap-2 p-2 border border-gray-300 rounded-md hover:bg-gray-50"
-      >
-        <Image src="/icons/google.png" alt="Google" width={20} height={20} />
-        Continuer avec Google
-      </button> */}
     </form>
   );
 }

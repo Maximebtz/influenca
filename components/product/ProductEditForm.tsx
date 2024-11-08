@@ -71,7 +71,7 @@ const ProductEditForm = ({ productId, initialData }: ProductEditFormProps) => {
       }
 
       router.refresh();
-      router.push("/products/my-products");
+      router.push("/boutique/products");
     } catch (error) {
       console.error("Erreur lors de la modification:", error);
       alert(error instanceof Error ? error.message : "Une erreur est survenue");

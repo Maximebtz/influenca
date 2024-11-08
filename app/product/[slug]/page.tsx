@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 async function getProduct(slug: string) {
   try {
@@ -18,7 +19,8 @@ async function getProduct(slug: string) {
             username: true,
             avatar: true
           }
-        }
+        },
+        images: true
       }
     });
 
@@ -43,16 +45,24 @@ const ShowProduct = async ({ params }: { params: { slug: string } }) => {
   return (
     <div className='wrapper'>
       <div className='max-w-7xl mx-auto px-4 mt-10'>
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="flex flex-col gap-4">
+          {/* fil d'ariane */}
+          <div className='flex items-center gap-4'>
+            <Link href='/home' className='text-influenca-gold hover:opacity-60'>Accueil</Link>
+            <span className='text-influenca-gray font-bold' >/</span>
+            <Link href={`/boutique/${product.influencer.id}`} className='text-influenca-gold hover:opacity-60 first-letter:uppercase'>{product.influencer.username}</Link>
+            <span className='text-influenca-gray font-bold' >/</span>
+            <p className='text-influenca-black-70 font-bold first-letter:uppercase'>{product.title}</p>
+          </div>
           {/* Informations du vendeur */}
           <div className="flex items-center gap-4 mb-6">
             {product.influencer.avatar ? (
               <Image
-                src={product.influencer.avatar}
+                src={`/uploads/${product.influencer.avatar}`}
                 alt={product.influencer.username}
                 width={48}
                 height={48}
-                className="rounded-full"
+                className="rounded-full object-cover w-20 h-20"
               />
             ) : (
               <div className="w-12 h-12 bg-influenca-black rounded-full flex items-center justify-center">

@@ -2,19 +2,18 @@
 
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
-import { redirect } from 'next/navigation'
 import ProductCard from '@/components/product/ProductCard'
 
 interface Product {
   id: string
   title: string
-  name: string
   description: string
   slug: string
   price: number
   createdAt: Date
   images: { url: string }[] | undefined
   influencer: {
+    id: string
     username: string
     avatar?: string
   }
@@ -25,7 +24,7 @@ interface Product {
   }[]
 }
 
-export default function MyProducts() {
+export default function BoutiquePage() {
   const { data: session, status } = useSession()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -33,7 +32,7 @@ export default function MyProducts() {
   const handleDelete = async (productId: string) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
       try {
-        const response = await fetch(`/api/products/my-products/${productId}`, {
+        const response = await fetch(`/api/boutique/products/${productId}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -63,10 +62,9 @@ export default function MyProducts() {
         // Vérifier si l'utilisateur est connecté et a le rôle INFLUENCER
         if (!session?.user || session.user.role !== 'INFLUENCER') {
           throw new Error('Accès non autorisé')
-          redirect('/home')
         }
 
-        const response = await fetch('/api/products/my-products', {
+        const response = await fetch('/api/boutique/products', {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -99,7 +97,7 @@ export default function MyProducts() {
   return (
     <div className='wrapper'>
       <div className='max-w-7xl mx-auto px-4 mt-10'>
-        <h1 className="text-2xl font-bold mb-6">Mes Produits</h1>
+        <h1 className="text-2xl font-bold mb-6">Ma Boutique</h1>
         
         {products.length === 0 ? (
             <p>Vous n'avez pas encore de produits.</p>

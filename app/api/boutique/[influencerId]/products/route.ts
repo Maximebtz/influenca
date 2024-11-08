@@ -1,21 +1,14 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { auth } from "@/app/auth";
 
-export async function GET(req: Request) {
+export async function GET(
+  request: Request,
+  { params }: { params: { influencerId: string } }
+) {
   try {
-    const session = await auth();
-
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: "Non autorisé" },
-        { status: 401 }
-      );
-    }
-
     const products = await prisma.product.findMany({
       where: {
-        influencerId: session.user.id
+        influencerId: params.influencerId
       },
       include: {
         categories: {
@@ -32,6 +25,9 @@ export async function GET(req: Request) {
           }
         },
         images: true
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     });
 
@@ -43,4 +39,4 @@ export async function GET(req: Request) {
       { status: 500 }
     );
   }
-}
+} 

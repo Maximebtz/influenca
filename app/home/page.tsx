@@ -1,68 +1,62 @@
-import ProductCard from "@/components/product/ProductCard";
+import InfluencerCard from "@/components/influencer/InfluencerCard";
+import { prisma } from "@/lib/db";
 
-
-async function getProducts() {
-  try {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/product`;
-    console.log('Fetching products from:', apiUrl);
-
-    const res = await fetch(apiUrl, {
-      cache: 'no-store',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    
-    if (!res.ok) {
-      console.error('Erreur de réponse:', res.status, res.statusText);
-      const errorText = await res.text();
-      console.error('Détails de l\'erreur:', errorText);
-      return [];
+async function getInfluencers() {
+    try {
+        const influencers = await prisma.user.findMany({
+            where: {
+                role: 'INFLUENCER'
+            },
+            include: {
+                followers: true,
+                products: {
+                    include: {
+                        categories: {
+                            include: {
+                                category: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        return influencers;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des influenceurs:', error);
+        return [];
     }
-    
-    const data = await res.json();
-    
-    return data;
-  } catch (error) {
-    console.error('Erreur détaillée:', error);
-    return [];
-  }
 }
 
-async function Home() {
-  const products = await getProducts();
+export default async function Home() {
+    const influencers = await getInfluencers();
 
-  return (
-    <div className='wrapper'>
-      <div className='max-w-7xl mx-auto px-4'>
-        <h1 className='mb-8'>
-          Découvrez nos produits
-        </h1>
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-          {products && products.length > 0 ? (
-            products.map((product: any) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                slug={product.slug}
-                title={product.title}
-                createdAt={product.createdAt}
-                description={product.description}
-                price={product.price}
-                influencer={product.influencer}
-                categories={product.categories}
-                images={product.images}
-                modify={false}
-              />
-            ))
-          ) : (
-            <p>Aucun produit disponible pour le moment</p>
-          )}
+    return (
+        <div className='wrapper'>
+            <div className='max-w-7xl mx-auto px-4'>
+                <h1 className='mb-8'>
+                    Découvrez nos influenceurs
+                </h1>
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
+                    {influencers && influencers.length > 0 ? (
+                        influencers.map((influencer) => (
+                            <InfluencerCard
+                                key={influencer.id}
+                                id={influencer.id}
+                                username={influencer.username}
+                                bio={influencer.bio || undefined}
+                                avatar={influencer.avatar || undefined}
+                                banner={influencer.banner || undefined}
+                                role={influencer.role}
+                                followers={influencer.followers}
+                                products={influencer.products}
+                            />
+                        ))
+                    ) : (
+                        <p>Aucun influenceur disponible pour le moment</p>
+                    )}
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  )
+    )
 }
-
-export default Home

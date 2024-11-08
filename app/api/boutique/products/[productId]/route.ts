@@ -7,8 +7,6 @@ export async function DELETE(
   { params }: { params: { productId: string } }
 ) {
   try {
-    console.log('Tentative de suppression du produit:', params.productId);
-    
     const session = await auth();
     
     if (!session?.user?.id) {
@@ -60,19 +58,15 @@ export async function DELETE(
       }
     });
 
-    console.log('Produit supprimé avec succès:', deletedProduct);
-
     return NextResponse.json(
       { message: "Produit supprimé avec succès" },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Erreur détaillée lors de la suppression:', error);
+    console.error('Erreur lors de la suppression:', error);
     return NextResponse.json(
-      { error: "Erreur interne du serveur wowowowowo", details: (error as Error).message },
+      { error: "Erreur interne du serveur" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 } 
