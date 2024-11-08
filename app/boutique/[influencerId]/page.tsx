@@ -4,6 +4,8 @@ import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import ProductCard from '@/components/product/ProductCard'
 import { useParams } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
 
 interface Product {
   id: string
@@ -78,7 +80,7 @@ export default function BoutiqueInfluenceur() {
   }
 
   return (
-    <div className='wrapper'>
+    <div className='wrapper '>
       {/* En-tête de la boutique */}
       <div className='relative w-full h-[200px] mb-8'>
         {influencer.banner ? (
@@ -92,25 +94,37 @@ export default function BoutiqueInfluenceur() {
         )}
         <div className='absolute bottom-4 left-4 flex items-center gap-4'>
           {influencer.avatar && (
-            <img
+            <Image
+              width={64}
+              height={64}
               src={`/uploads/${influencer.avatar}`}
               alt={influencer.username}
-              className="w-16 h-16 rounded-full border-2 border-white"
+              className="min-w-16 w-16 min-h-16 h-16 flex rounded-full border-2 border-white object-cover"
             />
           )}
-          <div>
+          <div className='flex flex-wrap gap-2'>
             <h1 className="text-2xl font-bold text-white drop-shadow-lg">
               Boutique de {influencer.username}
             </h1>
-            {influencer.bio && (
-              <p className="text-white drop-shadow-lg">{influencer.bio}</p>
-            )}
           </div>
         </div>
       </div>
-
       {/* Liste des produits */}
-      <div className='max-w-7xl mx-auto px-4'>
+      <div className='max-w-7xl mx-auto px-4 flex flex-col gap-8 pt-16'>
+        {/* fil d'ariane */}
+        <div className='flex items-center gap-4'>
+          <Link href='/home' className='text-influenca-gold hover:opacity-60'>Accueil</Link>
+          <span className='text-influenca-gray font-bold' >/</span>
+          <p className='text-influenca-black-70 font-bold first-letter:uppercase'>{influencer.username}</p>
+        </div>
+        {influencer.bio && (
+          <div className='flex flex-col '>
+            <h3>
+              Bio
+            </h3>
+              <p className="text-influenca-gray">{influencer.bio}</p>
+          </div>
+        )}
         {products.length === 0 ? (
           <p>Aucun produit disponible pour le moment</p>
         ) : (

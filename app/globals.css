@@ -78,12 +78,12 @@ main {
 
   /*** Wrapper ***/
   .wrapper {
-    @apply min-h-screen md:pt-24 pt-20 bg-white rounded-[32px] pb-4;
+    @apply min-h-screen h-max md:pt-24 pt-20 bg-white rounded-[32px] pb-4;
   }
 
   @media screen and (max-height: 768px) {
     .wrapper {
-      max-height: calc(100vh - 80px);
+      min-height: calc(100vh - 80px);
     }
   }
 
