@@ -61,9 +61,9 @@ function Header() {
             <div id='user-dropdown-menu' className={`absolute top-full mt-2 px-2 right-0 w-max h-max rounded-md border border-influenca-light-gray border-opacity-25 ${isUserDropdownMenuOpen ? 'block' : 'hidden'}`}>
               {session.user.role === 'INFLUENCER' && (
                 <div>
-                  <a href="/products/my-products">
+                  <a href="/boutique/products">
                     <button className='p-2 text-nowrap bg-transparent mt-1 text-white gap-2'>
-                      Mes produits
+                      Boutique
                     </button>
                     <hr className='border-t w-full opacity-30 bg-influenca-light-gray' />
                   </a>
