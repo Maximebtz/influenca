@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --config tests/setup/jest.config.cjs",
-    "vercel-build": "prisma generate && next build",
+    "vercel-build": "prisma generate --force && next build",
     "postinstall": "prisma generate"
   },
   "dependencies": {
