@@ -51,7 +51,7 @@ export async function DELETE(
     });
 
     // Enfin, supprimer le produit
-    const deletedProduct = await prisma.product.delete({
+    await prisma.product.delete({
       where: { 
         id: params.productId,
         influencerId: session.user.id

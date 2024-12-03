@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=mongodb+srv://maximebertuzzi:Blunt.68@cluster0.ghadp.mongodb.net/influenca
+      - NEXTAUTH_SECRET=RcG/HIZtqvnW6hCbhoE6z29CxFmGQrzTSx295w0agfM=
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXT_PUBLIC_API_URL=http://localhost:3000/api
+      - NODE_ENV=production
+    volumes:
+      - uploads_data:/app/public/uploads
+    restart: always
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  uploads_data:
+    driver: local

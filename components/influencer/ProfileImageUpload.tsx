@@ -37,18 +37,19 @@ export default function ProfileImageUpload({ currentAvatar, currentBanner, onSav
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="mb-2 block text-sm font-medium">
                     Photo de profil
                 </label>
                 <div className="flex items-center gap-4">
-                    <div className="w-24 h-24 rounded-full overflow-hidden">
+                    <div className="size-24 overflow-hidden rounded-full">
                         {(avatarPreview || currentAvatar) && (
                             <Image
                                 src={avatarPreview || `/uploads/${currentAvatar}`}
                                 alt="Avatar preview"
                                 width={96}
                                 height={96}
-                                className="w-full h-full object-cover"
+                                className="size-full object-cover"
+                                unoptimized
                             />
                         )}
                     </div>
@@ -62,18 +63,19 @@ export default function ProfileImageUpload({ currentAvatar, currentBanner, onSav
             </div>
 
             <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="mb-2 block text-sm font-medium">
                     Image de bannière
                 </label>
                 <div className="space-y-2">
-                    <div className="w-full h-32 rounded-lg overflow-hidden">
+                    <div className="h-32 w-full overflow-hidden rounded-lg">
                         {(bannerPreview || currentBanner) && (
                             <Image
                                 src={bannerPreview || `/uploads/${currentBanner}`}
                                 alt="Banner preview"
                                 width={400}
                                 height={128}
-                                className="w-full h-full object-cover"
+                                className="size-full object-cover"
+                                unoptimized
                             />
                         )}
                     </div>
@@ -88,7 +90,7 @@ export default function ProfileImageUpload({ currentAvatar, currentBanner, onSav
 
             <button
                 type="submit"
-                className="w-full bg-black text-white p-3 rounded-lg hover:opacity-80"
+                className="w-full rounded-lg bg-black p-3 text-white hover:opacity-80"
             >
                 Enregistrer les modifications
             </button>

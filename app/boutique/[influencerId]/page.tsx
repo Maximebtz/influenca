@@ -1,6 +1,6 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
+// import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import ProductCard from '@/components/product/ProductCard'
 import { useParams } from 'next/navigation'
@@ -35,7 +35,7 @@ interface Influencer {
 }
 
 export default function BoutiqueInfluenceur() {
-  const { data: session } = useSession()
+  // const { data: session } = useSession()
   const params = useParams()
   const [products, setProducts] = useState<Product[]>([])
   const [influencer, setInfluencer] = useState<Influencer | null>(null)
@@ -72,7 +72,7 @@ export default function BoutiqueInfluenceur() {
   }, [params.influencerId])
 
   if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Chargement...</div>
+    return <div className="flex min-h-screen items-center justify-center">Chargement...</div>
   }
 
   if (!influencer) {
@@ -82,15 +82,18 @@ export default function BoutiqueInfluenceur() {
   return (
     <div className='wrapper '>
       {/* En-tête de la boutique */}
-      <div className='relative w-full h-[200px] mb-8'>
+      <div className='relative mb-8 h-[200px] w-full'>
         {influencer.banner ? (
-          <img
+          <Image
             src={`/uploads/${influencer.banner}`}
             alt="Bannière"
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            priority
+            unoptimized
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-r from-gray-100 to-gray-200" />
+          <div className="size-full bg-gradient-to-r from-gray-100 to-gray-200" />
         )}
         <div className='absolute bottom-4 left-4 flex items-center gap-4'>
           {influencer.avatar && (
@@ -99,7 +102,8 @@ export default function BoutiqueInfluenceur() {
               height={64}
               src={`/uploads/${influencer.avatar}`}
               alt={influencer.username}
-              className="min-w-16 w-16 min-h-16 h-16 flex rounded-full border-2 border-white object-cover"
+              className="flex size-16 min-h-16 min-w-16 rounded-full border-2 border-white object-cover"
+              unoptimized
             />
           )}
           <div className='flex flex-wrap gap-2'>
@@ -110,12 +114,12 @@ export default function BoutiqueInfluenceur() {
         </div>
       </div>
       {/* Liste des produits */}
-      <div className='max-w-7xl mx-auto px-4 flex flex-col gap-8 pt-16'>
+      <div className='mx-auto flex max-w-7xl flex-col gap-8 px-4 pt-16'>
         {/* fil d'ariane */}
         <div className='flex items-center gap-4'>
           <Link href='/home' className='text-influenca-gold hover:opacity-60'>Accueil</Link>
-          <span className='text-influenca-gray font-bold' >/</span>
-          <p className='text-influenca-black-70 font-bold first-letter:uppercase'>{influencer.username}</p>
+          <span className='font-bold text-influenca-gray' >/</span>
+          <p className='font-bold text-influenca-black-70 first-letter:uppercase'>{influencer.username}</p>
         </div>
         {influencer.bio && (
           <div className='flex flex-col '>
@@ -128,7 +132,7 @@ export default function BoutiqueInfluenceur() {
         {products.length === 0 ? (
           <p>Aucun produit disponible pour le moment</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (
               <div key={product.id} className='relative'>
                 <ProductCard
@@ -137,8 +141,8 @@ export default function BoutiqueInfluenceur() {
                   slug={product.slug}
                   price={product.price}
                   description={product.description}
-                  createdAt={product.createdAt}
-                  influencer={product.influencer}
+                  // createdAt={product.createdAt}
+                  // influencer={product.influencer}
                   categories={product.categories}
                   images={product.images}
                   modify={false}

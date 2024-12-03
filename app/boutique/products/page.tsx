@@ -91,18 +91,18 @@ export default function BoutiquePage() {
   }, [session, status])
 
   if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Chargement...</div>
+    return <div className="flex min-h-screen items-center justify-center">Chargement...</div>
   }
 
   return (
     <div className='wrapper'>
-      <div className='max-w-7xl mx-auto px-4 mt-10'>
-        <h1 className="text-2xl font-bold mb-6">Ma Boutique</h1>
+      <div className='mx-auto mt-10 max-w-7xl px-4'>
+        <h1 className="mb-6 text-2xl font-bold">Ma Boutique</h1>
         
         {products.length === 0 ? (
-            <p>Vous n'avez pas encore de produits.</p>
+            <p>Vous n&apos;avez pas encore de produits.</p>
         ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (
                 <div key={product.id} className='relative'>
                     <ProductCard
@@ -111,8 +111,8 @@ export default function BoutiquePage() {
                         slug={product.slug}
                         price={product.price}
                         description={product.description}
-                        createdAt={product.createdAt}
-                        influencer={product.influencer}
+                        // createdAt={product.createdAt}
+                        // influencer={product.influencer}
                         categories={product.categories}
                         images={product.images}
                         modify={true}

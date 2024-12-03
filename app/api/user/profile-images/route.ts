@@ -15,7 +15,7 @@ export async function POST(request: Request) {
         const avatar = formData.get('avatar') as File | null
         const banner = formData.get('banner') as File | null
 
-        const updateData: any = {}
+        const updateData: { avatar?: string, banner?: string } = {}
 
         if (avatar) {
             const avatarBuffer = await avatar.arrayBuffer()

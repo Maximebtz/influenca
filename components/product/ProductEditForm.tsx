@@ -23,7 +23,7 @@ interface ProductEditFormProps {
 
 const ProductEditForm = ({ productId, initialData }: ProductEditFormProps) => {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   
   const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState(initialData);
@@ -79,79 +79,79 @@ const ProductEditForm = ({ productId, initialData }: ProductEditFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-xl mx-auto p-4">
+    <form onSubmit={handleSubmit} className="mx-auto max-w-xl space-y-4 p-4">
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="mb-1 block text-sm font-medium">
           Titre
         </label>
         <input
           type="text"
           value={formData.title}
           onChange={(e) => setFormData({...formData, title: e.target.value})}
-          className="w-full p-2 border rounded-md"
+          className="w-full rounded-md border p-2"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="mb-1 block text-sm font-medium">
           Couleur
         </label>
         <input
           type="text"
           value={formData.color}
           onChange={(e) => setFormData({...formData, color: e.target.value})}
-          className="w-full p-2 border rounded-md"
+          className="w-full rounded-md border p-2"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="mb-1 block text-sm font-medium">
           Taille
         </label>
         <input
           type="text"
           value={formData.size}
           onChange={(e) => setFormData({...formData, size: e.target.value})}
-          className="w-full p-2 border rounded-md"
+          className="w-full rounded-md border p-2"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="mb-1 block text-sm font-medium">
           Prix
         </label>
         <input
           type="number"
           value={formData.price}
           onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
-          className="w-full p-2 border rounded-md"
+          className="w-full rounded-md border p-2"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="mb-1 block text-sm font-medium">
           Description
         </label>
         <textarea
           value={formData.description}
           onChange={(e) => setFormData({...formData, description: e.target.value})}
-          className="w-full p-2 border rounded-md"
+          className="w-full rounded-md border p-2"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="mb-1 block text-sm font-medium">
           Catégorie
         </label>
         <select
           value={formData.categoryIds[0] || ""}
           onChange={(e) => setFormData({...formData, categoryIds: [e.target.value]})}
-          className="w-full p-2 border rounded-md"
+          className="w-full rounded-md border p-2"
           required
         >
           <option value="">Sélectionnez une catégorie</option>
@@ -165,8 +165,7 @@ const ProductEditForm = ({ productId, initialData }: ProductEditFormProps) => {
 
       <button
         type="submit"
-        className="w-full bg-influenca-black text-white p-2 rounded-md hover:opacity-80"
-        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {}}
+        className="w-full rounded-md bg-influenca-black p-2 text-white hover:opacity-80"
       >
         Modifier le produit
       </button>
