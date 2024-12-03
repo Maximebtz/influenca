@@ -13,6 +13,9 @@ services:
       - NEXTAUTH_URL=http://localhost:3000
       - NEXT_PUBLIC_API_URL=http://localhost:3000/api
       - NODE_ENV=production
+      - CLOUDINARY_CLOUD_NAME=de8dxcicf
+      - CLOUDINARY_API_KEY=216243196471798
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
     volumes:
       - uploads_data:/app/public/uploads
     restart: always
