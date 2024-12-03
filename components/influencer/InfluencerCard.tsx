@@ -36,7 +36,7 @@ function InfluencerCard({ id, username, bio, avatar, banner, followers, products
                     {/* Image principale (bannière) */}
                     {banner ? (
                         <Image
-                            src={`/uploads/${banner}`}
+                            src={banner}
                             alt={`Bannière de ${username}`}
                             width={200}
                             height={240}
@@ -55,7 +55,7 @@ function InfluencerCard({ id, username, bio, avatar, banner, followers, products
                         <div className="flex size-[calc(3.5rem+4px)] items-center justify-center rounded-full bg-white">
                             {avatar ? (
                                 <Image
-                                    src={`/uploads/${avatar}`}
+                                    src={avatar}
                                     alt={username}
                                     width={56}
                                     height={56}

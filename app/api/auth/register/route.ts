@@ -1,16 +1,7 @@
-import { writeFile } from 'fs/promises';
 import { NextResponse } from 'next/server';
-import path from 'path';
 import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
 import { prisma } from '@/lib/db';
-
-// Fonction pour générer un nom de fichier unique
-function generateUniqueFileName(originalName: string): string {
-  const uniqueSuffix = crypto.randomBytes(6).toString('hex');
-  const extension = path.extname(originalName);
-  return `${uniqueSuffix}${extension}`;
-}
+import { uploadToCloudinary, validateFileType } from '@/lib/upload';
 
 export async function POST(request: Request) {
   try {
@@ -22,26 +13,34 @@ export async function POST(request: Request) {
     const avatar = formData.get('avatar') as File | null;
     const banner = formData.get('banner') as File | null;
 
+    console.log('Début du processus d\'inscription');
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    let avatarFilename = null;
-    let bannerFilename = null;
+    let avatarUrl = null;
+    let bannerUrl = null;
 
-    // Gérer l'upload des fichiers
-    if (avatar) {
-      const avatarBuffer = await avatar.arrayBuffer();
-      avatarFilename = generateUniqueFileName(avatar.name);
-      const avatarPath = path.join(process.cwd(), 'public/uploads', avatarFilename);
-      await writeFile(avatarPath, Buffer.from(avatarBuffer));
-      console.log('Avatar sauvegardé:', avatarPath);
-    }
+    try {
+      // Upload de l'avatar
+      if (avatar && validateFileType(avatar.name)) {
+        console.log('Tentative d\'upload avatar');
+        const avatarBuffer = Buffer.from(await avatar.arrayBuffer());
+        avatarUrl = await uploadToCloudinary(avatarBuffer, 'influenca/avatars');
+        console.log('Avatar uploadé:', avatarUrl);
+      }
 
-    if (banner) {
-      const bannerBuffer = await banner.arrayBuffer();
-      bannerFilename = generateUniqueFileName(banner.name);
-      const bannerPath = path.join(process.cwd(), 'public/uploads', bannerFilename);
-      await writeFile(bannerPath, Buffer.from(bannerBuffer));
-      console.log('Bannière sauvegardée:', bannerPath);
+      // Upload de la bannière
+      if (banner && validateFileType(banner.name)) {
+        console.log('Tentative d\'upload bannière');
+        const bannerBuffer = Buffer.from(await banner.arrayBuffer());
+        bannerUrl = await uploadToCloudinary(bannerBuffer, 'influenca/banners');
+        console.log('Bannière uploadée:', bannerUrl);
+      }
+    } catch (uploadError) {
+      if (uploadError instanceof Error) {
+        throw new Error(`Erreur d'upload: ${uploadError.message}`);
+      }
+      // Si ce n'est pas une instance d'Error, on lance une erreur générique
+      throw new Error("Une erreur inconnue s'est produite lors de l'upload");
     }
 
     // Création de l'utilisateur
@@ -50,13 +49,17 @@ export async function POST(request: Request) {
       username,
       password: hashedPassword,
       role,
-      ...(avatarFilename && { avatar: avatarFilename }),
-      ...(bannerFilename && { banner: bannerFilename })
+      ...(avatarUrl && { avatar: avatarUrl }),
+      ...(bannerUrl && { banner: bannerUrl })
     };
+
+    console.log('Données utilisateur à créer:', userData);
 
     const user = await prisma.user.create({
       data: userData
     });
+
+    console.log('Utilisateur créé avec succès');
 
     return NextResponse.json({
       user: {
@@ -71,8 +74,12 @@ export async function POST(request: Request) {
 
   } catch (error: unknown) {
     console.error('Erreur détaillée lors de l\'inscription:', error);
+    console.error('Stack trace:', (error as Error).stack);
     return NextResponse.json(
-      { error: 'Erreur lors de l\'inscription: ' + (error instanceof Error ? error.message : String(error)) },
+      { 
+        error: 'Erreur lors de l\'inscription: ' + (error instanceof Error ? error.message : String(error)),
+        details: (error as Error).stack
+      },
       { status: 500 }
     );
   }

@@ -1,32 +1,27 @@
-import multer from 'multer';
-import path from 'path';
-import crypto from 'crypto';
-import { Request } from 'express';
-import { FileFilterCallback } from 'multer';
+import cloudinary from './cloudinary';
 
-// Définir le dossier de destination pour les fichiers téléchargés
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/uploads/');
-  },
-  filename: function (req, file, cb) {
-    // Générer un nom de fichier unique
-    const uniqueSuffix = crypto.randomBytes(6).toString('hex');
-    const extension = path.extname(file.originalname);
-    cb(null, `${uniqueSuffix}${extension}`);
-  }
-});
+export async function uploadToCloudinary(file: Buffer, folder: string = 'influenca'): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        resource_type: 'auto',
+      },
+      (error, result) => {
+        if (error || !result) {
+          reject(error || new Error('Upload failed'));
+          return;
+        }
+        resolve(result.secure_url);
+      }
+    );
 
-// Filtrer les fichiers pour n'accepter que les images
-const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
+    uploadStream.end(file);
+  });
+}
+
+export function validateFileType(filename: string): boolean {
   const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
-  const fileExtension = path.extname(file.originalname).toLowerCase();
-  
-  if (allowedExtensions.includes(fileExtension)) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-export const upload = multer({ storage, fileFilter }); 
+  const ext = filename.toLowerCase().match(/\.[^.]*$/)?.[0];
+  return ext ? allowedExtensions.includes(ext) : false;
+} 

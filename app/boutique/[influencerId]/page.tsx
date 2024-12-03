@@ -85,7 +85,7 @@ export default function BoutiqueInfluenceur() {
       <div className='relative mb-8 h-[200px] w-full'>
         {influencer.banner ? (
           <Image
-            src={`/uploads/${influencer.banner}`}
+            src={influencer.banner}
             alt="Bannière"
             fill
             className="object-cover"
@@ -100,7 +100,7 @@ export default function BoutiqueInfluenceur() {
             <Image
               width={64}
               height={64}
-              src={`/uploads/${influencer.avatar}`}
+              src={influencer.avatar}
               alt={influencer.username}
               className="flex size-16 min-h-16 min-w-16 rounded-full border-2 border-white object-cover"
               unoptimized

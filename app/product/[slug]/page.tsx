@@ -58,7 +58,7 @@ const ShowProduct = async ({ params }: { params: { slug: string } }) => {
           <div className="mb-6 flex items-center gap-4">
             {product.influencer.avatar ? (
               <Image
-                src={`/uploads/${product.influencer.avatar}`}
+                src={product.influencer.avatar}
                 alt={product.influencer.username}
                 width={48}
                 height={48}
