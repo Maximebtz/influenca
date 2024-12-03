@@ -7,7 +7,7 @@ type InfluencerCardProps = {
     bio?: string
     avatar?: string
     banner?: string
-    role: string
+    // role: string
     followers: {
         id: string
     }[]
@@ -20,7 +20,7 @@ type InfluencerCardProps = {
     }[]
 }
 
-function InfluencerCard({ id, username, bio, avatar, banner, role, followers, products }: InfluencerCardProps) {
+function InfluencerCard({ id, username, bio, avatar, banner, followers, products }: InfluencerCardProps) {
     const uniqueCategories = Array.from(new Set(
         products.flatMap(product => 
             product.categories.map(cat => cat.category.name)
@@ -30,8 +30,8 @@ function InfluencerCard({ id, username, bio, avatar, banner, role, followers, pr
     console.log(banner)
 
     return (
-        <Link href={`/boutique/${id}`} className='max-h-[512px] h-[512px]'>
-            <div className="relative card transition duration-100 cursor-pointer h-full">
+        <Link href={`/boutique/${id}`} className='h-[512px] max-h-[512px]'>
+            <div className="card relative h-full cursor-pointer transition duration-100">
                 <div className='relative'>
                     {/* Image principale (bannière) */}
                     {banner ? (
@@ -40,29 +40,31 @@ function InfluencerCard({ id, username, bio, avatar, banner, role, followers, pr
                             alt={`Bannière de ${username}`}
                             width={200}
                             height={240}
-                            className="rounded-lg w-full h-[240px] object-cover"
+                            className="h-[240px] w-full rounded-lg object-cover"
                             priority
+                            unoptimized
                         />
                     ) : (
-                        <div className="w-full h-[240px] bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg flex items-center justify-center">
+                        <div className="flex h-[240px] w-full items-center justify-center rounded-lg bg-gradient-to-r from-gray-100 to-gray-200">
                             <span className="text-gray-500">No banner available</span>
                         </div>
                     )}
                     
                     {/* Avatar superposé */}
-                    <div className="absolute left-8 bottom-0 translate-y-1/2 flex items-center gap-2">
-                        <div className="w-[calc(3.5rem+4px)] h-[calc(3.5rem+4px)] rounded-full bg-white flex items-center justify-center">
+                    <div className="absolute bottom-0 left-8 flex translate-y-1/2 items-center gap-2">
+                        <div className="flex size-[calc(3.5rem+4px)] items-center justify-center rounded-full bg-white">
                             {avatar ? (
                                 <Image
                                     src={`/uploads/${avatar}`}
                                     alt={username}
                                     width={56}
                                     height={56}
-                                    className="w-14 h-14 rounded-full object-cover"
+                                    className="size-14 rounded-full object-cover"
                                     priority
+                                    unoptimized
                                 />
                             ) : (
-                                <div className='w-14 h-14 bg-black rounded-full flex items-center justify-center'>
+                                <div className='flex size-14 items-center justify-center rounded-full bg-black'>
                                     <span className='text-white'>
                                         {username.charAt(0).toUpperCase()}
                                     </span>
@@ -72,15 +74,15 @@ function InfluencerCard({ id, username, bio, avatar, banner, role, followers, pr
                     </div>
                 </div>
 
-                <div className='flex flex-col gap-2 mt-8'>
+                <div className='mt-8 flex flex-col gap-2'>
                     <div className='flex w-full justify-between gap-2'>
                         <div className='flex items-center gap-1'>
-                            <span className='text-influenca-gray font-medium'>@</span>
+                            <span className='font-medium text-influenca-gray'>@</span>
                             <h3 className="text-sm font-medium first-letter:uppercase ">
                                 {username}
                             </h3>
                         </div>
-                        <p className="text-sm text-influenca-gray font-medium -mt-1">
+                        <p className="-mt-1 text-sm font-medium text-influenca-gray">
                             {followers.length} followers
                         </p>
                     </div>

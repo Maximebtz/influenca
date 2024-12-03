@@ -7,12 +7,12 @@ type ProductCardProps = {
     title: string
     description: string
     price: number
-    createdAt: Date
-    influencer: {
-        username: string
-        avatar?: string
-        followers: string[]
-    }
+    // createdAt: Date
+    // influencer: {
+    //     username: string
+    //     avatar?: string
+    //     followers: string[]
+    // }
     categories: {
         category: {
             name: string
@@ -23,7 +23,7 @@ type ProductCardProps = {
     onDelete?: (id: string) => void
 }
 
-function ProductCard({ id, slug, title, description, price, createdAt, influencer, categories, images, modify, onDelete }: ProductCardProps) {
+function ProductCard({ id, slug, title, description, price, categories, images, modify, onDelete }: ProductCardProps) {
     if (!images || images.length === 0) {
         throw new Error("Chaque produit doit avoir au moins une image.");
     }
@@ -36,8 +36,8 @@ function ProductCard({ id, slug, title, description, price, createdAt, influence
     }
     
     return (
-        <Link href={`/product/${slug}`} className='max-h-[512px] min-h-[512px] h-[512px] flex flex-col'>
-            <div className="relative card transition duration-100 cursor-pointer h-full flex flex-col">
+        <Link href={`/product/${slug}`} className='flex h-[512px] max-h-[512px] min-h-[512px] flex-col'>
+            <div className="card relative flex h-full cursor-pointer flex-col transition duration-100">
             
 
                 <div className='relative'>
@@ -46,34 +46,35 @@ function ProductCard({ id, slug, title, description, price, createdAt, influence
                         alt={title}
                         width={200}
                         height={200}
-                        className="rounded-lg w-full h-full object-cover"
+                        className="size-full rounded-lg object-cover"
                         priority
+                        unoptimized
                     />
                 </div>
                 <div className=' relative flex flex-col gap-2'>
                     {modify && (
-                        <div className='absolute top-2 right-0 flex gap-2 z-10'>
+                        <div className='absolute right-0 top-2 z-10 flex gap-2'>
                             <Link href={`/product/edit/${id}`}>
                                 <button
-                                    className="mt-0 bg-black text-white px-2 py-2 rounded hover:opacity-80"
+                                    className="mt-0 rounded bg-black p-2 text-white hover:opacity-80"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil" viewBox="0 0 16 16">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                                     </svg>
                                 </button>
                             </Link>
                             <button
                                 onClick={handleClick}
-                                className="mt-0 bg-red-500 text-white px-2 py-2 rounded hover:opacity-80"
+                                className="mt-0 rounded bg-red-500 p-2 text-white hover:opacity-80"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
                                 </svg>
                             </button>
                         </div>
                     )}
-                    <h2 className='text-xl font-semibold pt-4'>
+                    <h2 className='pt-4 text-xl font-semibold'>
                         {title}
                     </h2>
                     <span className="tag">
@@ -85,7 +86,7 @@ function ProductCard({ id, slug, title, description, price, createdAt, influence
                         </h4>
                         <p className="card-description">{description}</p>
                     </div>
-                    <p className="text-lg font-bold opacity-70 italic">{price}€</p>
+                    <p className="text-lg font-bold italic opacity-70">{price}€</p>
                 </div>
             </div>
         </Link>

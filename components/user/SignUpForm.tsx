@@ -87,7 +87,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-14 w-full max-w-md mx-auto">
+    <form onSubmit={handleSubmit} className="mx-auto mt-14 flex w-full max-w-md flex-col gap-4">
       <input
         type="email"
         value={email}
@@ -143,16 +143,17 @@ export default function SignUpForm() {
       {role === 'INFLUENCER' && (
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Photo de profil</label>
+            <label className="mb-2 block text-sm font-medium">Photo de profil</label>
             <div className="flex items-center gap-4">
               {avatarPreview && (
-                <div className="w-20 h-20 rounded-full overflow-hidden">
+                <div className="size-20 overflow-hidden rounded-full">
                   <Image
                     src={avatarPreview}
                     alt="Avatar preview"
                     width={80}
                     height={80}
-                    className="w-full h-full object-cover"
+                    className="size-full object-cover"
+                    unoptimized
                   />
                 </div>
               )}
@@ -166,16 +167,17 @@ export default function SignUpForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Image de bannière</label>
+            <label className="mb-2 block text-sm font-medium">Image de bannière</label>
             <div className="space-y-2">
               {bannerPreview && (
-                <div className="w-full h-32 rounded-lg overflow-hidden">
+                <div className="h-32 w-full overflow-hidden rounded-lg">
                   <Image
                     src={bannerPreview}
                     alt="Banner preview"
                     width={400}
                     height={128}
-                    className="w-full h-full object-cover"
+                    className="size-full object-cover"
+                    unoptimized
                   />
                 </div>
               )}
@@ -192,10 +194,10 @@ export default function SignUpForm() {
 
       <div className='flex items-center gap-2'>
         <input type="checkbox" id="terms" required />
-        <label htmlFor="terms" className='text-sm'>Accepter les conditions d'utilisation</label>
+        <label htmlFor="terms" className='text-sm'>Accepter les conditions d&apos;utilisation</label>
       </div>
       
-      <button className='medium-button' type="submit">S'inscrire</button>
+      <button className='medium-button' type="submit">S&apos;inscrire</button>
     </form>
   );
 }

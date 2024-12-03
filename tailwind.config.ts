@@ -21,5 +21,13 @@ const config: Config = {
     },
   },
   plugins: [],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
+  eslint: {
+    rules: {
+      'tailwindcss/enforces-negative-arbitrary-values': 'off',
+    },
+  },
 };
 export default config;

@@ -1,7 +1,7 @@
 import { writeFile } from 'fs/promises';
 import { NextResponse } from 'next/server';
 import path from 'path';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { prisma } from '@/lib/db';
 
@@ -69,10 +69,10 @@ export async function POST(request: Request) {
       },
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Erreur détaillée lors de l\'inscription:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de l\'inscription: ' + error.message },
+      { error: 'Erreur lors de l\'inscription: ' + (error instanceof Error ? error.message : String(error)) },
       { status: 500 }
     );
   }

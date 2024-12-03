@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
+import sharp from 'sharp';
 
 function generateSlug(text: string) {
   return text
@@ -32,8 +33,17 @@ export async function POST(request: Request) {
       const buffer = Buffer.from(arrayBuffer);
       const fileName = `${crypto.randomBytes(6).toString('hex')}${path.extname(file.name)}`;
       const filePath = path.join('public/uploads', fileName);
+      console.log('Chemin de sauvegarde:', path.join(process.cwd(), 'public/uploads', fileName));
 
-      await fs.promises.writeFile(filePath, buffer);
+      const optimizedBuffer = await sharp(buffer)
+        .resize(1920, null, { // largeur max de 1920px
+          withoutEnlargement: true,
+          fit: 'inside'
+        })
+        .webp({ quality: 85 })
+        .toBuffer();
+
+      await fs.promises.writeFile(filePath, optimizedBuffer);
 
       savedFiles.push({ url: `${fileName}` });
     }
@@ -43,7 +53,6 @@ export async function POST(request: Request) {
     // Générer un slug unique basé sur le titre
     const baseSlug = generateSlug(productData.title);
     let slug = baseSlug;
-    let counter = 1;
 
     // Vérifier si le slug existe déjà
     while (await prisma.product.findUnique({ where: { slug } })) {

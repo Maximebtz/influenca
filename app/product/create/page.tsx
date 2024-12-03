@@ -20,7 +20,7 @@ const CreateArticle = () => {
 
   return (
     <div className='wrapper'>
-      <div className='max-w-2xl mx-auto px-4 mt-10'>
+      <div className='mx-auto mt-10 max-w-2xl px-4'>
         <h1 className='mb-8 text-center'>
           Créer un produit
         </h1>

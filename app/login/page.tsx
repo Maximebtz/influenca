@@ -9,25 +9,25 @@ export default function SignUpPage() {
 
   return (
     <div className='wrapper'>
-      <div className=' flex flex-col items-center pt-28 gap-14'>
-        <div className='relative flex items-center w-full bg-influenca-light-gray rounded-md p-[2px] max-w-lg mx-auto'>
-          <div className={`absolute transition-all duration-200 ease-in-out z-0 top-1/2 transform -translate-y-1/2 ${isSignUp ? 'translate-x-full -ml-[2px]' : 'translate-x-0'} w-1/2 h-[calc(100%-4px)] bg-influenca-black rounded-[4px]`}></div>
+      <div className=' flex flex-col items-center gap-14 pt-28'>
+        <div className='relative mx-auto flex w-full max-w-lg items-center rounded-md bg-influenca-light-gray p-[2px]'>
+          <div className={`absolute top-1/2 z-0 -translate-y-1/2 transition-all duration-200 ease-in-out${isSignUp ? 'ml-[-2px] translate-x-full' : 'translate-x-0'} h-[calc(100%-4px)] w-1/2 rounded-[4px] bg-influenca-black`}></div>
           <p
             id='login-btn' 
-            className={`z-10 flex-1 text-center flex items-center justify-center text-sm h-8 cursor-pointer rounded-md ${!isSignUp ? 'text-white ' : 'text-influenca-black'}`}
+            className={`z-10 flex h-8 flex-1 cursor-pointer items-center justify-center rounded-md text-center text-sm ${!isSignUp ? 'text-white ' : 'text-influenca-black'}`}
             onClick={() => setIsSignUp(false)}
           >
             Connexion
           </p>
           <p 
             id='signup-btn' 
-            className={`z-10 flex-1 text-center flex items-center justify-center text-sm h-8 cursor-pointer rounded-md ${isSignUp ? 'text-white ' : 'text-influenca-black'}`}
+            className={`z-10 flex h-8 flex-1 cursor-pointer items-center justify-center rounded-md text-center text-sm ${isSignUp ? 'text-white ' : 'text-influenca-black'}`}
             onClick={() => setIsSignUp(true)}
           >
             Inscription
           </p>
         </div>
-        <div className="flex flex-col items-center w-full max-w-md mx-auto">
+        <div className="mx-auto flex w-full max-w-md flex-col items-center">
           <h1>{isSignUp ? 'Inscription' : 'Connexion'}</h1> 
           {isSignUp ? <SignUpForm /> : <SignInForm />}
         </div>

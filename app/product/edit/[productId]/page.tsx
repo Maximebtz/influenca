@@ -57,12 +57,12 @@ const EditProduct = ({ params }: { params: { productId: string } }) => {
     size: product.size,
     price: product.price,
     description: product.description,
-    categoryIds: product.categories.map((cat: any) => cat.categoryId)
+    categoryIds: product.categories.map((cat: { categoryId: string }) => cat.categoryId)
   }
 
   return (
     <div className='wrapper'>
-      <div className='max-w-2xl mx-auto px-4 mt-10'>
+      <div className='mx-auto mt-10 max-w-2xl px-4'>
         <h1 className='mb-8 text-center'>
           Modifier le produit
         </h1>
