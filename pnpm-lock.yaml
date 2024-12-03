@@ -69,6 +69,9 @@ importers:
       '@types/date-fns':
         specifier: ^2.5.3
         version: 2.6.3
+      '@types/express':
+        specifier: ^5.0.0
+        version: 5.0.0
       '@types/multer':
         specifier: ^1.4.12
         version: 1.4.12
