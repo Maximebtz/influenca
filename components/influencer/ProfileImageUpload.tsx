@@ -44,7 +44,7 @@ export default function ProfileImageUpload({ currentAvatar, currentBanner, onSav
                     <div className="size-24 overflow-hidden rounded-full">
                         {(avatarPreview || currentAvatar) && (
                             <Image
-                                src={avatarPreview || `/uploads/${currentAvatar}`}
+                                src={avatarPreview || `${currentAvatar}`}
                                 alt="Avatar preview"
                                 width={96}
                                 height={96}
@@ -70,7 +70,7 @@ export default function ProfileImageUpload({ currentAvatar, currentBanner, onSav
                     <div className="h-32 w-full overflow-hidden rounded-lg">
                         {(bannerPreview || currentBanner) && (
                             <Image
-                                src={bannerPreview || `/uploads/${currentBanner}`}
+                                src={bannerPreview || `${currentBanner}`}
                                 alt="Banner preview"
                                 width={400}
                                 height={128}

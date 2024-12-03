@@ -42,7 +42,7 @@ function ProductCard({ id, slug, title, description, price, categories, images, 
 
                 <div className='relative'>
                     <Image
-                        src={`/uploads/${images[0].url}`}
+                        src={images[0].url}
                         alt={title}
                         width={200}
                         height={200}
