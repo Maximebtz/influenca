@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --config tests/setup/jest.config.cjs",
-    "vercel-build": "npm install && prisma generate && next build",
-    "install": "npm install --legacy-peer-deps"
+    "vercel-build": "prisma generate && next build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.3",
@@ -66,5 +66,9 @@
   "author": "",
   "license": "ISC",
   "type": "module",
-  "packageManager": "npm"
+  "packageManager": "pnpm@8.15.4",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.15.4"
+  }
 }
