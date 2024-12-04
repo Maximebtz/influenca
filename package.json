@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "test": "jest --config tests/setup/jest.config.cjs",
+    "test": "jest --config tests/setup/jest.config.cjs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.3",
