@@ -2,6 +2,22 @@ import InfluencerCard from "@/components/influencer/InfluencerCard";
 import { prisma } from "@/lib/db";
 import { unstable_cache } from 'next/cache';
 
+interface Influencer {
+  id: string;
+  username: string;
+  bio?: string | null;
+  avatar?: string | null;
+  banner?: string | null;
+  followers: { id: string }[];
+  products: {
+    categories: {
+      category: {
+        name: string;
+      };
+    }[];
+  }[];
+}
+
 const getInfluencers = unstable_cache(
   async () => {
     try {
@@ -9,13 +25,26 @@ const getInfluencers = unstable_cache(
             where: {
                 role: 'INFLUENCER'
             },
-            include: {
-                followers: true,
+            select: {
+                id: true,
+                username: true,
+                bio: true,
+                avatar: true,
+                banner: true,
+                followers: {
+                    select: {
+                        id: true
+                    }
+                },
                 products: {
-                    include: {
+                    select: {
                         categories: {
-                            include: {
-                                category: true
+                            select: {
+                                category: {
+                                    select: {
+                                        name: true
+                                    }
+                                }
                             }
                         }
                     }
@@ -23,15 +52,15 @@ const getInfluencers = unstable_cache(
             }
         });
         
-        return influencers;
+        return influencers as Influencer[];
     } catch (error) {
         console.error('Erreur lors de la récupération des influenceurs:', error);
-        return [];
+        return [] as Influencer[];
     }
   },
   ['influencers-list'],
   {
-    revalidate: 60, // Revalider toutes les 60 secondes
+    revalidate: 60,
     tags: ['influencers']
   }
 );
