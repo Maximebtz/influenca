@@ -5,7 +5,14 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { JWT } from "next-auth/jwt";
 import { Session, User as NextAuthUser } from "next-auth";
-import { AdapterUser } from "@auth/core/adapters";
+
+interface AdapterUser {
+  id: string;
+  email?: string | null;
+  name?: string | null;
+  role?: string;
+  username?: string;
+}
 
 declare module "next-auth/jwt" {
   interface JWT {
@@ -16,13 +23,6 @@ declare module "next-auth/jwt" {
 
 declare module "next-auth" {
   interface User {
-    role?: string;
-    username?: string;
-  }
-}
-
-declare module "@auth/core/adapters" {
-  interface AdapterUser {
     role?: string;
     username?: string;
   }

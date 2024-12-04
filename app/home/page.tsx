@@ -1,72 +1,50 @@
 import InfluencerCard from "@/components/influencer/InfluencerCard";
 import { prisma } from "@/lib/db";
 import { unstable_cache } from 'next/cache';
+import type { User, Product, Follow, Category } from '@prisma/client';
 
-interface Influencer {
-  id: string;
-  username: string;
-  bio?: string | null;
-  avatar?: string | null;
-  banner?: string | null;
-  followers: { id: string }[];
-  products: {
-    categories: {
-      category: {
-        name: string;
-      };
-    }[];
-  }[];
-}
+type ProductWithCategories = Product & {
+    categories: { category: Category }[];
+};
+
+type UserWithRelations = User & {
+    followers: Follow[];
+    products: ProductWithCategories[];
+};
 
 const getInfluencers = unstable_cache(
-  async () => {
-    try {
-        const influencers = await prisma.user.findMany({
-            where: {
-                role: 'INFLUENCER'
-            },
-            select: {
-                id: true,
-                username: true,
-                bio: true,
-                avatar: true,
-                banner: true,
-                followers: {
-                    select: {
-                        id: true
-                    }
+    async () => {
+        try {
+            const influencers = await prisma.user.findMany({
+                where: {
+                    role: 'INFLUENCER'
                 },
-                products: {
-                    select: {
-                        categories: {
-                            select: {
-                                category: {
-                                    select: {
-                                        name: true
-                                    }
+                include: {
+                    followers: true,
+                    products: {
+                        include: {
+                            categories: {
+                                include: {
+                                    category: true
                                 }
                             }
                         }
                     }
                 }
-            }
-        });
-        
-        return influencers as Influencer[];
-    } catch (error) {
-        console.error('Erreur lors de la récupération des influenceurs:', error);
-        return [] as Influencer[];
-    }
-  },
-  ['influencers-list'],
-  {
-    revalidate: 60,
-    tags: ['influencers']
-  }
-);
+            });
 
-export const revalidate = 60;
-export const dynamic = 'force-dynamic'; 
+            return influencers;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des influenceurs:', error);
+            return [];
+        }
+    },
+    ['influencers-list'],
+    {
+        revalidate: 60,
+        tags: ['influencers']
+    }
+);
 
 export default async function Home() {
     const influencers = await getInfluencers();
@@ -79,24 +57,22 @@ export default async function Home() {
                 </h1>
                 <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3'>
                     {influencers && influencers.length > 0 ? (
-                        influencers.map((influencer) => (
+                        influencers.map((influencer: UserWithRelations) => (
                             <InfluencerCard
                                 key={influencer.id}
                                 id={influencer.id}
-                                username={influencer.username}
-                                bio={influencer.bio || undefined}
-                                avatar={influencer.avatar || undefined}
-                                banner={influencer.banner || undefined}
-                                // role={influencer.role}
+                                username={influencer.username || ''}
+                                avatar={influencer.avatar || ''}
+                                banner={influencer.banner || ''}
                                 followers={influencer.followers}
                                 products={influencer.products}
                             />
                         ))
                     ) : (
-                        <p>Aucun influenceur disponible pour le moment</p>
+                        <p>Aucun influenceur trouvé</p>
                     )}
                 </div>
             </div>
         </div>
-    )
+    );
 }
