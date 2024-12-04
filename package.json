@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "postinstall": "prisma generate",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --config tests/setup/jest.config.cjs",
-    "postinstall": "prisma generate"
+    "test": "jest --config tests/setup/jest.config.cjs"
   },
   "dependencies": {
     "@auth/core": "^0.37.4",
