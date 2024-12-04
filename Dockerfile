@@ -14,9 +14,6 @@ COPY .env.production ./.env
 # Installer les dépendances
 RUN npm install
 
-# Générer le client Prisma avec les bons binaryTargets
-RUN npx prisma generate
-
 # Copier le reste des fichiers et build
 COPY . .
 RUN npm run build
