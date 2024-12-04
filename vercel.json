@@ -1,11 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "pnpm build",
+  "buildCommand": "pnpm run vercel-build",
   "installCommand": "pnpm install",
   "framework": "nextjs",
   "env": {
-    "PRISMA_CLIENT_ENGINE_TYPE": "library",
-    "PRISMA_CLI_BINARY_TARGETS": "linux-musl-openssl-3.0.x",
     "DATABASE_URL": "mongodb+srv://maximebertuzzi:Blunt.68@cluster0.ghadp.mongodb.net/influenca"
   }
 }
