@@ -1,6 +1,5 @@
 import InfluencerCard from "@/components/influencer/InfluencerCard";
 import { prisma } from "@/lib/db";
-import { unstable_cache } from 'next/cache';
 import type { User, Product, Follow, Category } from '@prisma/client';
 
 type ProductWithCategories = Product & {
@@ -12,39 +11,32 @@ type UserWithRelations = User & {
     products: ProductWithCategories[];
 };
 
-const getInfluencers = unstable_cache(
-    async () => {
-        try {
-            const influencers = await prisma.user.findMany({
-                where: {
-                    role: 'INFLUENCER'
-                },
-                include: {
-                    followers: true,
-                    products: {
-                        include: {
-                            categories: {
-                                include: {
-                                    category: true
-                                }
+const getInfluencers = async () => {
+    try {
+        const influencers = await prisma.user.findMany({
+            where: {
+                role: 'INFLUENCER'
+            },
+            include: {
+                followers: true,
+                products: {
+                    include: {
+                        categories: {
+                            include: {
+                                category: true
                             }
                         }
                     }
                 }
-            });
+            }
+        });
 
-            return influencers;
-        } catch (error) {
-            console.error('Erreur lors de la récupération des influenceurs:', error);
-            return [];
-        }
-    },
-    ['influencers-list'],
-    {
-        revalidate: 60,
-        tags: ['influencers']
+        return influencers;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des influenceurs:', error);
+        return [];
     }
-);
+};
 
 export default async function Home() {
     const influencers = await getInfluencers();
