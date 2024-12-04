@@ -6,6 +6,8 @@
   "env": {
     "NODE_ENV": "production",
     "DATABASE_URL": "mongodb+srv://maximebertuzzi:Blunt.68@cluster0.ghadp.mongodb.net/influenca",
-    "PRISMA_CLI_QUERY_ENGINE_TYPE": "binary"
+    "PRISMA_CLI_QUERY_ENGINE_TYPE": "binary",
+    "DEBUG": "*",
+    "PRISMA_LOG_LEVEL": "info"
   }
 }
