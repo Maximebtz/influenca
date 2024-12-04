@@ -44,7 +44,7 @@ COPY --from=builder /app/.env ./.env
 RUN mkdir -p /app/public/uploads && chmod 777 /app/public/uploads
 
 # Variables d'environnement pour Prisma
-ENV PRISMA_CLI_BINARY_TARGETS=native
+ENV PRISMA_CLI_BINARY_TARGETS=linux-musl-openssl-3.0.x
 ENV NODE_ENV=production
 
 # Exposer le port

@@ -1,10 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "pnpm install && pnpm prisma generate && pnpm build",
+  "buildCommand": "pnpm build",
   "installCommand": "pnpm install",
   "framework": "nextjs",
   "env": {
-    "PRISMA_CLI_BINARY_TARGETS": "native,linux-musl-openssl-3.0.x",
     "PRISMA_CLIENT_ENGINE_TYPE": "library",
     "DATABASE_URL": "mongodb+srv://maximebertuzzi:Blunt.68@cluster0.ghadp.mongodb.net/influenca"
   }
