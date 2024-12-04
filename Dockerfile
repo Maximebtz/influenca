@@ -15,7 +15,6 @@ COPY .env.production ./.env
 RUN npm install
 
 # Générer le client Prisma avec les bons binaryTargets
-ENV PRISMA_CLI_BINARY_TARGETS="linux-musl-openssl-3.0.x"
 RUN npx prisma generate
 
 # Copier le reste des fichiers et build
@@ -42,7 +41,6 @@ COPY --from=builder /app/.env ./.env
 RUN mkdir -p /app/public/uploads && chmod 777 /app/public/uploads
 
 # Variables d'environnement pour Prisma
-ENV PRISMA_CLI_BINARY_TARGETS=native
 ENV NODE_ENV=production
 
 # Exposer le port
