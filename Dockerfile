@@ -14,14 +14,12 @@ COPY .env.production ./.env
 # Installer les dépendances
 RUN npm install
 
-# Générer le client Prisma avec le bon runtime
-ENV NODE_ENV=production
-RUN npx prisma generate --generator client {provider: "prisma-client-js"}
+# Générer le client Prisma avec les bons binaryTargets
+ENV PRISMA_CLI_BINARY_TARGETS="linux-musl-openssl-3.0.x"
+RUN npx prisma generate
 
-# Copier le reste des fichiers du projet
+# Copier le reste des fichiers et build
 COPY . .
-
-# Construire l'application
 RUN npm run build
 
 # Stage de production
