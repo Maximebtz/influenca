@@ -16,7 +16,7 @@ RUN npm install
 
 # Générer le client Prisma avec le bon runtime
 ENV NODE_ENV=production
-RUN npx prisma generate --generator client {provider: "prisma-client-js"}
+RUN npx prisma generate
 
 # Copier le reste des fichiers du projet
 COPY . .
