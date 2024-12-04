@@ -75,5 +75,8 @@
       "@prisma/engines": "5.9.1"
     }
   },
-  "corepack": true
+  "corepack": true,
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  }
 }
