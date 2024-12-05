@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   request: Request,
   { params }: { params: { influencerId: string } }
@@ -14,7 +16,7 @@ export async function GET(
       select: {
         id: true,
         username: true,
-        avatar: true,
+        avatar: true, 
         banner: true,
         bio: true,
         email: true
@@ -28,7 +30,11 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(influencer);
+    return NextResponse.json(influencer, {
+      headers: {
+        'Cache-Control': 'no-store, max-age=0',
+      },
+    });
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'influenceur:', error);
     return NextResponse.json(

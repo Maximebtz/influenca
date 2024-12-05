@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/app/auth";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const session = await auth();
@@ -35,7 +37,11 @@ export async function GET() {
       }
     });
 
-    return NextResponse.json(products);
+    return NextResponse.json(products, {
+      headers: {
+        'Cache-Control': 'no-store, max-age=0',
+      },
+    });
   } catch (error) {
     console.error('Erreur lors de la récupération des produits:', error);
     return NextResponse.json(
@@ -43,4 +49,4 @@ export async function GET() {
       { status: 500 }
     );
   }
-} 
+}

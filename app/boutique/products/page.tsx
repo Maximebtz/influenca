@@ -40,12 +40,23 @@ export default function BoutiquePage() {
           credentials: 'include'
         });
 
-        const data = await response.json();
-
         if (response.ok) {
-          setProducts(products.filter(product => product.id !== productId));
+          const refreshResponse = await fetch('/api/boutique/products', {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            cache: 'no-store'
+          });
+          
+          if (refreshResponse.ok) {
+            const freshData = await refreshResponse.json();
+            setProducts(freshData);
+          }
+          
           alert('Produit supprimé avec succès');
         } else {
+          const data = await response.json();
           console.error('Erreur de suppression:', data);
           alert(data.error || 'Erreur lors de la suppression du produit');
         }
@@ -98,31 +109,31 @@ export default function BoutiquePage() {
     <div className='wrapper'>
       <div className='mx-auto mt-10 max-w-7xl px-4'>
         <h1 className="mb-6 text-2xl font-bold">Ma Boutique</h1>
-        
+
         {products.length === 0 ? (
-            <p>Vous n&apos;avez pas encore de produits.</p>
+          <p>Vous n&apos;avez pas encore de produits.</p>
         ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (
-                <div key={product.id} className='relative'>
-                    <ProductCard
-                        id={product.id}
-                        title={product.title}
-                        slug={product.slug}
-                        price={product.price}
-                        description={product.description}
-                        // createdAt={product.createdAt}
-                        // influencer={product.influencer}
-                        categories={product.categories}
-                        images={product.images}
-                        modify={true}
-                        onDelete={handleDelete}
-                    />
-                </div>
+              <div key={product.id} className='relative'>
+                <ProductCard
+                  id={product.id}
+                  title={product.title}
+                  slug={product.slug}
+                  price={product.price}
+                  description={product.description}
+                  // createdAt={product.createdAt}
+                  // influencer={product.influencer}
+                  categories={product.categories}
+                  images={product.images}
+                  modify={true}
+                  onDelete={handleDelete}
+                />
+              </div>
             ))}
-            </div>
+          </div>
         )}
-        </div>
+      </div>
     </div>
   )
 } 
