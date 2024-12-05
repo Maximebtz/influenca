@@ -50,22 +50,3 @@ export async function GET() {
     );
   }
 }
-
-export async function DELETE(request: Request) {
-  try {
-    // ... delete logic ...
-    
-    // Après la suppression, ajoutez ces en-têtes
-    return NextResponse.json({ success: true }, {
-      headers: {
-        'Cache-Control': 'no-store, max-age=0',
-      },
-    });
-  } catch (error) {
-    console.error('Erreur lors de la suppression du produit:', error);
-    return NextResponse.json(
-      { error: "Erreur interne du serveur" },
-      { status: 500 }
-    );
-  }
-}
