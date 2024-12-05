@@ -17,7 +17,7 @@ services:
       - CLOUDINARY_API_KEY=216243196471798
       - CLOUDINARY_API_SECRET=IGGULsiPqqrqu0xWypsAiwf70b8
       - CLOUDINARY_URL=cloudinary://216243196471798:IGGULsiPqqrqu0xWypsAiwf70b8@de8dxclcf
-      - PRISMA_CLI_BINARY_TARGETS=native,rhel-openssl-1.1.x
+      - PRISMA_CLI_BINARY_TARGETS=debian-openssl-1.1.x,linux-musl
     volumes:
       - uploads_data:/app/public/uploads
     restart: always
