@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --config tests/setup/jest.config.cjs",
-    "postinstall": "DEBUG=* prisma generate"
+    "postinstall": "npx prisma generate"
   },
   "dependencies": {
     "@auth/core": "^0.37.4",
