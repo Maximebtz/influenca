@@ -58,10 +58,13 @@ const ProductCreateForm = () => {
     }
 
     const formDataToSend = new FormData();
-    formDataToSend.append('productData', JSON.stringify({
+    const productDataToSend = {
       ...formData,
-      influencerId: session.user.id
-    }));
+      influencerId: session.user.id,
+      categoryIds: formData.categoryIds
+    };
+
+    formDataToSend.append('productData', JSON.stringify(productDataToSend));
 
     images.forEach((image) => {
       formDataToSend.append('images', image);
@@ -79,7 +82,7 @@ const ProductCreateForm = () => {
       }
 
       router.refresh();
-      router.push("/");
+      router.push("/boutique/products");
     } catch (error) {
       console.error("Erreur lors de la création:", error);
       alert(error instanceof Error ? error.message : "Une erreur est survenue");

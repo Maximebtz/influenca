@@ -54,13 +54,21 @@ export async function POST(request: Request) {
       slug = `${baseSlug}-${randomString}`;
     }
 
+    // Extraire categoryIds et supprimer de productData
+    const { categoryIds, ...productDataWithoutCategories } = productData;
+
     const product = await prisma.product.create({
       data: {
-        ...productData,
+        ...productDataWithoutCategories,
         price,
         slug,
         images: {
           create: imageUrls
+        },
+        categories: {
+          create: categoryIds.map((categoryId: string) => ({
+            categoryId
+          }))
         },
         influencerId: session.user.id
       }

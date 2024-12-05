@@ -45,8 +45,8 @@ function ProductCard({ id, slug, title, description, price, categories, images, 
                         src={images[0].url}
                         alt={title}
                         width={200}
-                        height={200}
-                        className="size-full rounded-lg object-cover"
+                        height={240}
+                        className="h-[240px] w-full rounded-lg object-cover"
                         priority
                         unoptimized
                     />
