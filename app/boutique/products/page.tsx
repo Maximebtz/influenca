@@ -40,12 +40,23 @@ export default function BoutiquePage() {
           credentials: 'include'
         });
 
-        const data = await response.json();
-
         if (response.ok) {
-          setProducts(products.filter(product => product.id !== productId));
+          const refreshResponse = await fetch('/api/boutique/products', {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            cache: 'no-store'
+          });
+          
+          if (refreshResponse.ok) {
+            const freshData = await refreshResponse.json();
+            setProducts(freshData);
+          }
+          
           alert('Produit supprimé avec succès');
         } else {
+          const data = await response.json();
           console.error('Erreur de suppression:', data);
           alert(data.error || 'Erreur lors de la suppression du produit');
         }
