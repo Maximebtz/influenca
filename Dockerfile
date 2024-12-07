@@ -10,7 +10,14 @@ RUN apk add --no-cache libc6-compat openssl
 COPY package*.json ./
 COPY prisma ./prisma/
 
+# Modifier temporairement package.json pour retirer le script prepare
+RUN npm pkg delete scripts.prepare
+
+# Installer les plugins Babel nécessaires
+RUN npm install --save-dev @babel/plugin-transform-private-methods @babel/plugin-proposal-private-property-in-object
+
 # Installer uniquement les dépendances de production et générer Prisma
+ENV HUSKY=0
 RUN npm ci
 RUN npx prisma generate
 
@@ -38,6 +45,7 @@ RUN mkdir -p /app/public/uploads && chmod 777 /app/public/uploads
 
 # Définir l'environnement de production
 ENV NODE_ENV=production
+ENV HUSKY=0
 
 # Exposer le port
 EXPOSE 3000
