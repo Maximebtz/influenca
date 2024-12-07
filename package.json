@@ -12,7 +12,8 @@
     "test:coverage": "jest --config __tests__/setup/jest.config.cjs --coverage",
     "postinstall": "npx prisma generate",
     "test:api": "jest --config __tests__/setup/jest.api.config.cjs",
-    "prepare": ""
+    "prepare": "",
+    "vercel-build": "pnpm install --no-frozen-lockfile && next build"
   },
   "dependencies": {
     "@auth/core": "^0.37.4",
