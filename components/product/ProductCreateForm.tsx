@@ -90,69 +90,88 @@ const ProductCreateForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-xl space-y-4 p-4">
-      
+    <form className="mx-auto max-w-xl space-y-4 p-4" onSubmit={handleSubmit}>
       <div>
-        <label className="mb-1 block text-sm font-medium">
+        <label 
+          htmlFor="title"
+          className="mb-1 block text-sm font-medium"
+        >
           Titre
         </label>
         <input
+          id="title"
           type="text"
           value={formData.title}
           onChange={(e) => setFormData({...formData, title: e.target.value})}
           className="w-full rounded-md border p-2"
-          autoComplete="on"
           required
+          autoComplete="on"
         />
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">
+        <label 
+          htmlFor="color"
+          className="mb-1 block text-sm font-medium"
+        >
           Couleur
         </label>
         <input
+          id="color"
           type="text"
           value={formData.color}
           onChange={(e) => setFormData({...formData, color: e.target.value})}
           className="w-full rounded-md border p-2"
-          autoComplete="on"
           required
+          autoComplete="on"
         />
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">
+        <label 
+          htmlFor="size"
+          className="mb-1 block text-sm font-medium"
+        >
           Taille
         </label>
         <input
+          id="size"
           type="text"
           value={formData.size}
           onChange={(e) => setFormData({...formData, size: e.target.value})}
           className="w-full rounded-md border p-2"
-          autoComplete="on"
           required
+          autoComplete="on"
         />
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">
+        <label 
+          htmlFor="price"
+          className="mb-1 block text-sm font-medium"
+        >
           Prix
         </label>
         <input
+          id="price"
           type="number"
           value={formData.price}
           onChange={(e) => setFormData({...formData, price: e.target.value})}
           className="w-full rounded-md border p-2"
-          autoComplete="on"
           required
+          autoComplete="on"
         />
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">
+        <label 
+          htmlFor="description"
+          className="mb-1 block text-sm font-medium"
+        >
           Description
         </label>
         <textarea
+          id="description"
           value={formData.description}
           onChange={(e) => setFormData({...formData, description: e.target.value})}
           className="w-full rounded-md border p-2"
@@ -162,10 +181,14 @@ const ProductCreateForm = () => {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">
+        <label 
+          htmlFor="category"
+          className="mb-1 block text-sm font-medium"
+        >
           Catégorie
         </label>
         <select
+          id="category"
           value={formData.categoryIds[0] || ""}
           onChange={(e) => setFormData({...formData, categoryIds: [e.target.value]})}
           className="w-full rounded-md border p-2"
@@ -182,10 +205,14 @@ const ProductCreateForm = () => {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">
+        <label 
+          htmlFor="images"
+          className="mb-1 block text-sm font-medium"
+        >
           Images
         </label>
         <input
+          id="images"
           type="file"
           multiple
           onChange={handleFileChange}

@@ -18,10 +18,11 @@ const config = {
   testPathIgnorePatterns: [
     '/node_modules/',
     '/.next/',
-    '/setup/'
+    '/setup/',
+    '/__tests__/api/'
   ],
   transformIgnorePatterns: [
-    '/node_modules/'
+    '/node_modules/(?!(next-auth|@next-auth)/)'
   ]
 };
 

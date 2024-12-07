@@ -10,7 +10,8 @@
     "test": "jest --config __tests__/setup/jest.config.cjs",
     "test:watch": "jest --config __tests__/setup/jest.config.cjs --watch",
     "test:coverage": "jest --config __tests__/setup/jest.config.cjs --coverage",
-    "postinstall": "DEBUG=* prisma generate"
+    "postinstall": "DEBUG=* prisma generate",
+    "test:api": "jest --config __tests__/setup/jest.api.config.cjs"
   },
   "dependencies": {
     "@auth/core": "^0.37.4",
@@ -44,12 +45,14 @@
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/date-fns": "^2.5.3",
+    "@types/jest": "^29.5.14",
     "@types/multer": "^1.4.12",
     "@types/next-auth": "^3.13.0",
     "@types/node": "^20.16.11",
     "@types/node-fetch": "^2.6.12",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/whatwg-fetch": "^0.0.33",
     "babel-jest": "^29.7.0",
     "eslint": "^8.57.1",
     "eslint-config-next": "14.2.15",
@@ -63,7 +66,9 @@
     "tailwindcss": "^3.4.1",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "undici": "^7.1.0",
+    "whatwg-fetch": "^3.6.20"
   },
   "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
   "main": "index.js",
