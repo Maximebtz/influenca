@@ -10,7 +10,7 @@
     "test": "jest --config __tests__/setup/jest.config.cjs",
     "test:watch": "jest --config __tests__/setup/jest.config.cjs --watch",
     "test:coverage": "jest --config __tests__/setup/jest.config.cjs --coverage",
-    "postinstall": "node ./node_modules/prisma/build/index.js generate",
+    "postinstall": "DEBUG=* npx prisma generate",
     "test:api": "jest --config __tests__/setup/jest.api.config.cjs",
     "prepare": "husky install"
   },
@@ -86,4 +86,3 @@
   "license": "ISC",
   "type": "module"
 }
-
