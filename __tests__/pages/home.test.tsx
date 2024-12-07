@@ -26,10 +26,8 @@ type UserWithRelations = User & {
 // Mock des composants et des dépendances
 jest.mock('@/components/influencer/InfluencerCard', () => ({
   __esModule: true,
-  default: function MockInfluencerCard(props: any) {
-    return React.createElement('div', {
-      'data-testid': 'influencer-card'
-    }, props.username);
+  default: function MockInfluencerCard({ username }: { username: string }) {
+    return <div data-testid="influencer-card">{username}</div>;
   }
 }));
 

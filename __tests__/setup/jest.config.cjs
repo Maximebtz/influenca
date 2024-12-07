@@ -10,7 +10,16 @@ const config = {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
   },
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': [
+      'babel-jest',
+      {
+        presets: [
+          ['@babel/preset-env', { targets: { node: 'current' } }],
+          '@babel/preset-typescript',
+          ['@babel/preset-react', { runtime: 'automatic' }],
+        ],
+      },
+    ],
   },
   setupFilesAfterEnv: [
     path.resolve(__dirname, './jest.setup.ts')
@@ -22,8 +31,9 @@ const config = {
     '/__tests__/api/'
   ],
   transformIgnorePatterns: [
-    '/node_modules/(?!(next-auth|@next-auth)/)'
-  ]
+    '/node_modules/(?!(next|@next|react|@react))',
+  ],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 };
 
 module.exports = config;
