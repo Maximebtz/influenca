@@ -1,17 +1,38 @@
 version: 2.1
 orbs:
   node: circleci/node@5.1.1
+
 jobs:
-  build-and-test:
+  test:
     docker:
-      - image: "cimg/base:stable"
+      - image: "cimg/node:20"
     steps:
       - checkout
-      - node/install
       - node/install-packages
       - run:
+          name: Exécuter les tests unitaires
           command: npm run test
+      - run:
+          name: Exécuter les tests d'API
+          command: npm run test:api
+      - store_test_results:
+          path: test-results
+
+  build:
+    docker:
+      - image: "cimg/node:20"
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: docker build -t app:${CIRCLE_SHA1} .
+
 workflows:
-  build-and-test:
+  version: 2
+  test-and-build:
     jobs:
-      - build-and-test
+      - test
+      - build:
+          requires:
+            - test
