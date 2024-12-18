@@ -17,4 +17,4 @@ describe('Configuration Cloudinary', () => {
     expect(process.env.CLOUDINARY_API_KEY).toBeDefined();
     expect(process.env.CLOUDINARY_API_SECRET).toBeDefined();
   });
-}); 
+});  
