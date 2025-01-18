@@ -1,6 +1,6 @@
 'use client'
 
-import ProductCreateForm from "@/components/product/ProductCreateForm"
+import ProductCreateForm from "@/components/product/productCreateForm"
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 

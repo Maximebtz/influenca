@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import SignInForm from '@/components/user/SignInForm';
+import SignInForm from '@/components/user/signInForm';
 import '@testing-library/jest-dom';
 
 // Mock next-auth
