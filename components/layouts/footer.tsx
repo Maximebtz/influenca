@@ -2,14 +2,15 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-function footer() {
+
+function Footer() {
   return (
     <div className="flex flex-col">
       <div className="flex overflow-hidden flex-col items-center px-8 pt-12 pb-4 w-full max-md:px-5 max-md:max-w-full">
         <div className="flex flex-wrap gap-10 justify-center items-center self-stretch px-12 w-full max-md:px-5 max-md:max-w-full">
           <div className="flex flex-col justify-between items-center self-stretch my-auto min-h-[96px] min-w-[240px] w-[400px]">
             <div className="flex gap-2.5 justify-center items-center px-9 w-24 h-24 bg-neutral-950 min-h-[96px] rounded-[48px] max-md:px-5">
-              <img
+              <Image
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/3bcf48db236504250f6ffe760c007e4cc67b808ea545db4f479b11a9995608ba?placeholderIfAbsent=true&apiKey=51af9e6119e94e64a4295796d4ac2659"
                 alt="Company logo"
@@ -86,4 +87,4 @@ function footer() {
   )
 }
 
-export default footer
+export default Footer;
