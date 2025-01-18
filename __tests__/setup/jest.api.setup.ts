@@ -23,4 +23,8 @@ process.env.CLOUDINARY_API_SECRET = 'test_api_secret';
 // Nettoyage des mocks après chaque test
 afterEach(() => {
   jest.clearAllMocks();
+});
+
+beforeAll(() => {
+  Object.defineProperty(process.env, 'NODE_ENV', { value: 'test' });
 }); 

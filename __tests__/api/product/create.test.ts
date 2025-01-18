@@ -42,11 +42,18 @@ describe('POST /api/product/create', () => {
     categoryIds: ['cat1']
   };
 
+  let consoleErrorSpy: jest.SpyInstance;
+  
   beforeEach(() => {
     jest.clearAllMocks();
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (uploadToCloudinary as jest.Mock).mockResolvedValue('https://cloudinary.com/test.jpg');
     (validateFileType as jest.Mock).mockReturnValue(true);
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
   });
 
   it('devrait créer un produit avec succès', async () => {
@@ -126,7 +133,7 @@ describe('POST /api/product/create', () => {
 
   it('devrait gérer les erreurs de création', async () => {
     (prisma.product.create as jest.Mock).mockRejectedValue(new Error('DB Error'));
-
+    
     const formData = new FormData();
     formData.append('productData', JSON.stringify(mockFormData));
     const blob = new Blob(['test file content'], { type: 'image/jpeg' });

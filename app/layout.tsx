@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/layouts/header";
+import Footer from "@/components/layouts/footer";
 import { AuthProvider } from './providers'
 import Image from "next/image";
 import PageTransition from '@/components/transitions/PageTransition';
@@ -26,6 +27,7 @@ export default function RootLayout({
               {children}
             </PageTransition>
           </main>
+          <Footer />
         </AuthProvider>
       </body>
     </html>

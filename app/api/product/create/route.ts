@@ -76,7 +76,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json(product);
   } catch (error) {
-    console.error("Erreur création produit:", error);
+    if (process.env.NODE_ENV !== 'test') {
+      console.error("Erreur création produit:", error);
+    }
     return NextResponse.json(
       { error: "Erreur lors de la création du produit" },
       { status: 500 }

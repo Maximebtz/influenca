@@ -23,7 +23,6 @@ body {
 main {
   width: 100%;
   border-radius: 32px;
-  overflow: scroll;
   height: 100vh;
 }
 
