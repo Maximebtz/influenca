@@ -1,6 +1,6 @@
 'use client'
 
-import ProductEditForm from "@/components/product/productEditForm"
+import ProductEditForm from "@/components/product/ProductEditForm"
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from "react"
 import { redirect } from 'next/navigation'

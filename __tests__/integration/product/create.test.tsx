@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import ProductCreateForm from '@/components/product/productCreateForm';
+import ProductCreateForm from '@/components/product/ProductCreateForm';
 import '@testing-library/jest-dom';
 
 // Mocks

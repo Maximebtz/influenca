@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
-import ProductCard from '@/components/product/productCard'
+import ProductCard from '@/components/product/ProductCard'
 
 interface Product {
   id: string
