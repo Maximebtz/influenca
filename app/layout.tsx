@@ -19,9 +19,15 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className="relative bg-influenca-black">
-        <Image src="/logo/logo.png" alt="logo" width={72} height={72} className="absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2" priority unoptimized />
+        {/* Loading Transition */}
+        <div className="absolute left-0 top-0 -z-10 flex h-lvh w-full items-center justify-center">
+          <Image src="/logo/logo.png" alt="logo" width={72} height={72} className="absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2" priority unoptimized />
+        </div>
+        {/* AuthProvider */}
         <AuthProvider>
+          {/* Header */}
           <Header />
+          {/* Main */}
           <main>
             <PageTransition>
               {children}
