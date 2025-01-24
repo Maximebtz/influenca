@@ -13,7 +13,7 @@
     "postinstall": "npx prisma generate",
     "test:api": "jest --config __tests__/setup/jest.api.config.cjs",
     "prepare": "",
-    "vercel-build": "npm install && prisma generate && next build"
+    "vercel-build": "prisma generate && next build"
   },
   "dependencies": {
     "@auth/core": "^0.37.4",

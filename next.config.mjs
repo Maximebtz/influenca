@@ -51,6 +51,16 @@ const nextConfig = {
       },
     ];
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs']
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': '.'
+    }
+    return config
+  }
 }
 
 export default nextConfig
