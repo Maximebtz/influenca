@@ -10,8 +10,10 @@ import fetch, { Request, Headers } from 'node-fetch';
 jest.mock('@/lib/db', () => ({
   prisma: {
     user: {
+      findUnique: jest.fn(),
       create: jest.fn()
-    }
+    },
+    $disconnect: jest.fn()
   }
 }));
 
@@ -89,7 +91,7 @@ describe('POST /api/auth/register', () => {
     const data = await response.json();
 
     // Vérifiez le statut et la structure de la réponse
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
     expect(data.user).toEqual(expect.objectContaining({
       email: 'test@test.com',
       username: 'testuser',

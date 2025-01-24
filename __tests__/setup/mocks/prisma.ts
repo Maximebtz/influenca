@@ -19,7 +19,6 @@ export const prisma = {
     findMany: jest.fn(),
     findUnique: jest.fn(),
   },
-  // Ajoutez d'autres modèles Prisma selon vos besoins
 };
 
 export const PrismaClient = jest.fn(() => prisma); 

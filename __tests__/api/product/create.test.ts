@@ -24,7 +24,8 @@ jest.mock('@/lib/db', () => ({
     product: {
       findUnique: jest.fn(),
       create: jest.fn()
-    }
+    },
+    $disconnect: jest.fn()
   }
 }));
 

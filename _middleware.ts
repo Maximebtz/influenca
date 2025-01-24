@@ -12,7 +12,8 @@ export default auth((req) => {
   // Gestion de l'authentification
   const isLoggedIn = !!req.auth
   const isProtectedRoute = req.nextUrl.pathname.startsWith('/boutique') || 
-                          req.nextUrl.pathname.startsWith('/product/create')
+                          req.nextUrl.pathname.startsWith('/product/create') ||
+                          req.nextUrl.pathname.startsWith('/home')
   
   if (isProtectedRoute && !isLoggedIn) {
     return Response.redirect(new URL('/login', req.nextUrl))

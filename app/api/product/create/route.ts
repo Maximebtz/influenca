@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { auth } from "@/app/auth";
-import { uploadToCloudinary, validateFileType } from "@/lib/upload";
+import { uploadToCloudinary } from "@/lib/upload";
 
 // Fonction pour générer un slug à partir d'un titre
 function generateSlug(title: string): string {
@@ -14,9 +14,13 @@ function generateSlug(title: string): string {
     .substring(0, 200);              // Limite la longueur
 }
 
+export const maxDuration = 300; // Augmente la durée maximale à 300 secondes
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     const session = await auth();
+    
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Non autorisé" },
@@ -24,26 +28,33 @@ export async function POST(request: Request) {
       );
     }
 
-    const data = await request.formData();
-    const productData = JSON.parse(data.get('productData') as string);
-    const files = data.getAll('images') as File[];
+    const formData = await request.formData();
+    const productData = JSON.parse(formData.get('productData') as string);
+    const images = formData.getAll('images');
 
-    if (files.length === 0) {
+    if (!images || images.length === 0) {
       return NextResponse.json(
         { error: "Au moins une image est requise" },
         { status: 400 }
       );
     }
 
-    // Upload des images sur Cloudinary
-    const imageUrls = [];
-    for (const file of files) {
-      if (validateFileType(file.name)) {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const imageUrl = await uploadToCloudinary(buffer, 'influenca/products');
-        imageUrls.push({ url: imageUrl });
+    // Upload des images en parallèle pour améliorer les performances
+    const imageUploadPromises = images.map(async (image) => {
+      if (!(image instanceof File)) {
+        throw new Error('Invalid image type');
       }
-    }
+      try {
+        const buffer = await image.arrayBuffer();
+        const result = await uploadToCloudinary(Buffer.from(buffer));
+        return result;
+      } catch (error) {
+        console.error('Erreur upload image:', error);
+        throw new Error('Erreur lors de l\'upload des images');
+      }
+    });
+
+    const imageUrls = await Promise.all(imageUploadPromises);
 
     const price = parseFloat(productData.price);
     const baseSlug = generateSlug(productData.title);
@@ -63,7 +74,9 @@ export async function POST(request: Request) {
         price,
         slug,
         images: {
-          create: imageUrls
+          create: imageUrls.map(url => ({
+            url: url as string
+          }))
         },
         categories: {
           create: categoryIds.map((categoryId: string) => ({
@@ -76,12 +89,12 @@ export async function POST(request: Request) {
 
     return NextResponse.json(product);
   } catch (error) {
-    if (process.env.NODE_ENV !== 'test') {
-      console.error("Erreur création produit:", error);
-    }
+    console.error('Erreur détaillée lors de la création:', error);
     return NextResponse.json(
-      { error: "Erreur lors de la création du produit" },
+      { error: "Erreur lors de la création du produit", details: (error as Error).message },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }

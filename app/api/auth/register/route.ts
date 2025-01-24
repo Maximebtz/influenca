@@ -14,6 +14,35 @@ export async function POST(request: Request) {
     const banner = formData.get('banner') as File | null;
 
     console.log('Début du processus d\'inscription');
+
+    // Vérification si l'username existe déjà
+    const existingUsername = await prisma.user.findUnique({
+      where: {
+        username: username
+      }
+    });
+
+    if (existingUsername) {
+      return NextResponse.json(
+        { error: "Ce nom d'utilisateur est déjà utilisé" },
+        { status: 400 }
+      );
+    }
+
+    // Vérification si l'email existe déjà
+    const existingEmail = await prisma.user.findUnique({
+      where: {
+        email: email
+      }
+    });
+
+    if (existingEmail) {
+      return NextResponse.json(
+        { error: "Cette adresse email est déjà utilisée" },
+        { status: 400 }
+      );
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     let avatarUrl = null;
@@ -61,7 +90,10 @@ export async function POST(request: Request) {
 
     console.log('Utilisateur créé avec succès');
 
+    // Au lieu de retourner directement l'utilisateur, on retourne un signal de succès
     return NextResponse.json({
+      success: true,
+      message: "Inscription réussie",
       user: {
         id: user.id,
         email: user.email,
@@ -69,8 +101,8 @@ export async function POST(request: Request) {
         role: user.role,
         avatar: user.avatar,
         banner: user.banner
-      },
-    });
+      }
+    }, { status: 201 });
 
   } catch (error: unknown) {
     console.error('Erreur détaillée lors de l\'inscription:', error);

@@ -33,6 +33,7 @@ export default function RootLayout({
               {children}
             </PageTransition>
           </main>
+          {/* Footer */}
           <Footer />
         </AuthProvider>
       </body>
