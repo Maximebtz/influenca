@@ -31,7 +31,7 @@ jest.mock('@/lib/db', () => ({
 
 describe('POST /api/product/create', () => {
   const mockSession = {
-    user: { id: 'test-user-id' }
+    user: { id: 'test-user-id' } 
   };
 
   const mockFormData = {
